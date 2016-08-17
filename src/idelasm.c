@@ -585,7 +585,7 @@ scan_filename (void)
   the_place.column = scan - line_start;
 
   if (ch != '"')
-    syntax_error ("Bad # syntax");
+    syntax_error ("Bad # syntax: expected opening \"");
   next ();
 
   token_text = scan;
@@ -593,7 +593,7 @@ scan_filename (void)
     next ();
 
   if (ch != '"')
-    syntax_error ("Bad # syntax");
+    syntax_error ("Bad # syntax: expected closing \"");
   *scan = '\0';
   next ();
 
@@ -610,15 +610,23 @@ scan_line_directive (void)
   next ();				/* skip over the '#' */
   skip_blanks ();
   gobble ();
+  if (0 == strcmp (token_text, "pragma"))
+    for (;;)			/* XXX refactor */
+      {
+	char c = ch;
+	if ('\n' == c || '\0' == c)
+	  return;
+	next ();
+      }
   if (!parse_number (&line))
-    syntax_error ("Bad # syntax");
+    syntax_error ("Bad # syntax: expected line number [%s]", token_text);
   skip_blanks ();
   filename = scan_filename ();
   skip_blanks ();
   gobble ();
   skip_blanks ();
   if (ch != '\n' && ch != '\0')
-    syntax_error ("Bad # syntax");
+    syntax_error ("Bad # syntax: expected end of line");
   if (ch) next ();
   
   the_place.line = line;

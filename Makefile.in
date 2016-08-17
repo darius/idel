@@ -23,7 +23,7 @@ mandir := @mandir@
 CC := @CC@
 CFLAGS := @CFLAGS@ @DEFS@ -Didel_version_string='"$(VERSION)"'
 ifeq ($(CC),gcc)
-	CFLAGS += -Wall -W -Wpointer-arith -Wstrict-prototypes
+	CFLAGS += -g2 -fprofile-arcs -ftest-coverage -Wall -W -Wpointer-arith -Wstrict-prototypes
 endif
 
 # Other external programs
