@@ -1,0 +1,21 @@
+#define vsize 20
+bss-data: v 80
+
+def 0 1 main
+  vsize iota
+  show
+  vsize 1 + loop
+  show
+  v @ u.  '\n' emit 
+  0 ;
+
+
+#include "udot.idel"
+#include "rev.idel"
+
+def 0 0 show   0 showing  '\n' emit ;
+def 1 0 showing 
+  { i --  i vsize - if
+            v i ref u.  ' ' emit
+            i 1 + showing
+          then } ;

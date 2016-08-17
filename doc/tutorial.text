@@ -1,0 +1,172 @@
+I'm assuming you've already built and installed the system:
+
+	$ ./configure && make && make install
+
+(I'll show shell command lines indented with a $ prompt, and code
+snippets indented without the prompt.)
+
+
+1. ASSEMBLY BASICS
+
+Now let's write some programs in Idel assembly.  The simplest possible
+program does nothing:
+
+	def 0 1 main   0 ;
+
+You can try that out at the prompt this way:
+
+	$ echo "def 0 1 main   0 ;" | idelrun
+	$ 
+
+So that successfully did nothing, hurray!  How did it work?  The `def'
+introduces a function definition, the `0 1' means it takes no
+arguments and returns one value (a status code), `main' is the name of
+the function, `0' is the value returned, and `;' ends it.  The extra
+spaces after the function name aren't significant, they're just for
+readability.
+
+Now to do something useful: output the letter A.
+
+	def 0 1 main   'A' emit  0 ;
+
+First the ASCII code for `A' is pushed on the stack, then `emit' pops
+it off and outputs that byte.  The overall stack effect of `main' is
+still 0 inputs and 1 output (`0 1') since the push is balanced by a
+pop.  What happens when we violate that balance?  Let's see:
+
+	$ echo "def 0 1 main   'A'  0 ;" | idelrun
+	idelvm: Bad object file in defn #0: Inaccurate stack effect declaration (more results are yielded than declared)
+	$ echo "def 0 1 main   emit  0 ;" | idelrun
+	idelvm: Bad object file in defn #0: Inaccurate stack effect declaration (inferred 1 arguments, not 0)
+
+Let's dissect that.  First, the error messages came from idelvm rather
+than idelasm, because the assembler will happily pass along your bad
+stack declarations without checking them.  Someday after I get around
+to adding that check into the assembler, the virtual machine loader
+still could not assume its input came from a friendly assembler.
+
+Second, the error messages refer to `defn #0' rather than `main'
+because the object file is stripped of names and other debug info.
+(Such info is an optional feature not yet done.)
+
+Just for practice, let's see what an error message from the assembler
+looks like:
+
+	$ echo "def 0 1 main   'A' remit  0 ;" | idelrun
+	1.27: Unresolved reference to remit
+
+We made a typo for `emit', and the assembler took it for a function
+call to an undefined function.  The `1.27' is the source position of
+the offending token: line 1, column 27.
+
+Now we define multiple functions in the same file:
+
+	def 0 1 main   letter  0 ;	
+	def 1 0 letter   'A' emit ;	\ Print an `A'
+
+The `\' character starts a comment that continues to the end of the
+line.  Line breaks don't matter otherwise -- source code is free-form.
+The `main' function is where execution starts because of its position
+at the start, not its name.  We could have called it `flooby' instead.
+
+Next feature: local variables!
+
+	\ Emit an `A' in a fancy way.  (It's ASCII code 65.)
+	def 0 1 main   8 squared  1 +  emit  0 ;
+
+	\ Take a number n and return its square.
+	def 1 1 squared { n -- n n * } ;
+
+`squared' is a function taking 1 argument and returning 1 result.  In
+its body is the block structure ``{ <variables> -- <code> }''.  The
+overall effect of the block is to pop as many elements off the stack
+as there are variables to the left of the `--' and put them in the
+named local variables, then perform the <code>.  After the `}' the
+variables fall out of scope.  So `squared' pops the stack top into
+`n', then pushes `n' twice and multiplies (with `*').
+
+There's an if-then-else construct, only like in Forth it's spelled
+if-else-then:
+
+	def 0 1 main   -65 abs emit  0 ;
+
+	def 1 1 abs   
+	  { n -- n 0 < if  0 n -  else  n  then } ;
+
+The ``n 0 <'' pushes a flag on the stack, and `if' pops it off and
+executes either ``0 n -'' (if the flag is true) or ``n'' (if the flag
+is false).  Like in C, any nonzero value is considered true.  Unlike
+in C, the canonical true value is -1 (not 1): ``0 1 <'' yields -1 as
+its value.
+
+We now know enough to write a loop!  Let's print out 50 stars:
+
+	def 0 1 main   50 stars  0 ;
+
+	def 1 0 stars
+	  { n -- 0 n < if  
+                   star  
+	           n 1 - stars
+                 then } ;
+
+	def 0 0 star   '*' emit ;
+
+The recursive call inside `stars' does *not* grow the stack, because
+it's in tail position -- it's the last thing the function does.  Calls
+in tail position are how this virtual machine provides the equivalent
+of GOTOs.  You can think of each function as a label in a conventional
+assembly language, with the arguments on the stack being those local
+variables that are live at that label.  Translating an imperative
+program into this form is called the SSA transformation.  Many
+optimizing compilers and functional programmers prefer to work on code
+in this form.
+
+One more feature: string literals.
+
+	string: hello "Hello, world!\n"
+	def 0 1 main   hello.addr hello.size type  0 ;
+
+	\ Print out the string starting at a of length n.
+	def 2 0 type 
+	  { a n --  0 n < if  
+	              a c@ emit
+	              a 1 +  n 1 -  type  
+	            then } ;
+
+
+2. THE COOL STUFF
+
+OK, so why would anyone want to use this system?  The best reasons are
+not yet implemented, but here's one thing to try: you can save the
+state of a running program, including its full stack, into a portable
+object file that can be resumed on another machine.
+
+	string: hello "Hello, "
+	string: world "world!\n"
+
+	def 0 0 main   
+	  hello.addr hello.size type
+	  save if  world.addr world.size type  then ;
+
+	\ Print out the string starting at a of length n.
+	def 2 0 type 
+	  { a n --  0 n < if  
+	              a c@ emit
+	              a 1 +  n 1 -  type  
+	            then } ;
+
+The `save' instruction in this version of the architecture stores the
+state into a file named `frozen' and pushes 0 on the stack.  The
+frozen state will resume on the next instruction, only with -1 on the
+stack instead.  (Kind of like fork() or setjmp().)
+
+	$ idelasm tmp2 | idelvm -development
+	Hello, $ scp frozen remote-host
+	$ ssh darius@remote-host idelvm -development frozen
+	world!
+
+This demonstrates running a program partway, freezing it, transporting
+the state to another machine, and resuming.  (We had to use the
+-development flag because, er... the security and resource management
+for this feature are currently broken and it's not important enough to
+fix.  And I'm thinking of taking it out completely.  Oh, well.)

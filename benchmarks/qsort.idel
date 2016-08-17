@@ -1,0 +1,89 @@
+\ Quicksort benchmark.
+\ This is unrealistic as a library function for at least two reasons:
+\  - specialized to an array of ints
+\  - bad worst-case behavior (and already-sorted is the worst case)
+
+bss-data: array 1000000
+
+def 0 1 main
+  array 250000 fill-random
+  array 250000 sort
+  array 10 sort
+  array 10 dump-loop  '\n' emit
+  0 ;
+
+def 2 0 fill-random
+  { a u --
+    u if
+      rand a !
+      a 4 +  u 1 -  fill-random
+    then } ;
+
+
+def 2 0 sort
+  { a u --
+    1 u u< if
+      a  a u 1 - 2 << +  qsort
+      a  a u 2 << +  isort
+    then } ;
+
+
+def 2 0 isort  
+  { a s --  a  s  a 4 +  isort-loop } ;
+def 3 0 isort-loop
+  { a s j --
+    j s u< if
+      a  s  j  j @  j  inserting
+    then } ;
+def 5 0 inserting
+  { a s j key i --
+    a i u< if
+      i 4 - @
+      { Ai --
+	key Ai < if
+	  Ai i !
+	  a s j key  i 4 -  inserting
+	else
+	  key i !
+	  a  s  j 4 +  isort-loop
+	then }
+    else
+      key i !
+      a  s  j 4 +  isort-loop
+    then } ;
+
+
+\ Derived from Cormen, Leiserson, & Rivest, _Algorithms_
+
+#define CUTOFF 40
+
+def 2 0 qsort
+  { p r --
+    p CUTOFF +  r u< if
+      p  r  p @  r 4 +  p 4 -  upwards
+    then } ;
+def 5 0 upwards
+  4 + { x j i --
+        i @  x < if  x j i upwards  else  x i j downwards  then } ;
+def 5 0 downwards
+  4 - { x i j --
+        x  j @ < if  
+	  x i j downwards
+	else
+	  i j < if
+	    i @  j @  i !  j !
+	    x j i upwards
+	  else
+	    { p r -- 
+	      j p -  r j - 4 -  u< if
+		p j  j 4 + r 
+	      else
+		j 4 + r  p j
+	      then }
+	    qsort  qsort
+	  then 
+	then } ;
+
+
+#include "../tests/random.idel"
+#include "dump.idel"

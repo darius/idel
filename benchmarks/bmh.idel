@@ -1,0 +1,94 @@
+\ Boyer-Moore-Horspool string matching
+
+string: pattern "right"
+
+bss-data: buffer 32768
+
+def 0 1 main
+  pattern.addr pattern.size bmh-init
+  buffer  buffer reading buffer -  500  spin  u. '\n' emit
+  0 ;
+
+def 3 1 spin
+  1 - 
+  { addr u times --
+    addr u 0 count-matches
+    times if
+      { count -- } addr u times spin
+    then } ;
+
+def 3 1 count-matches
+  { addr u count -- 
+    addr u bmh-search 1 +
+    { index --
+      index 0 = if
+        count
+      else
+        addr index +  u index -  count 1 +  count-matches
+      then } } ;
+
+def 1 1 reading
+  absorb { addr c -- 
+           c 0 < if
+             addr
+           else
+             c addr c!
+             addr 1 + reading
+           then } ;
+
+#include "../tests/udot.idel"
+
+
+#define alphabet 256
+#define notfound  -1
+
+ints: M    0  ;ints
+ints: Pat  0  ;ints
+bss-data: skip-table 1024          \ 4*alphabet
+
+def 2 0 bmh-init
+  { pat u --
+    skip-table alphabet u fill
+    pat Pat !
+    u 1 -  M !
+    pat  0  u 1 -  init-loop } ;
+def 3 0 init-loop
+  { pat j m --
+    j m u< if
+      m j -  skip-table  pat j + c@ 2 << + !
+      pat  j 1 +  m  init-loop
+    then } ;
+
+def 2 1 bmh-search
+  { dat u --
+    M @ 0 < if
+      0
+    else
+      dat  u 1 -  M @  outer
+    then } ;
+
+def 3 1 outer
+  { dat n i --
+    n i < if
+      notfound
+    else
+      dat  n  i  M @  i  inner
+    then } ;
+def 5 1 inner
+  { dat n k j i --
+    dat k + c@  Pat @ j + c@  = if
+      j 0 = if
+        k
+      else
+        dat  n  k 1 -  j 1 -  i  inner
+      then
+    else
+      dat  n  dat i + c@ 2 << skip-table + @ i +  outer
+    then } ;
+
+def 3 0 fill
+  { addr u x --
+    u if
+      x addr !
+      addr 4 +  u 1 -  x  fill
+    then } ;

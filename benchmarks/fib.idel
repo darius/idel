@@ -1,0 +1,4 @@
+def 0 1 main   34 fib u.  '\n' emit  0 ;
+
+#include "../tests/udot.idel"
+#include "../tests/fib.idel"

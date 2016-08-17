@@ -1,0 +1,17 @@
+#define at        2 << +
+#define ref       at @
+#define set       at !
+
+def 2 0 reversing
+  { i j -- i j < if  
+             v i ref  v j ref  v i set  v j set
+             i 1 +  j 1 -  reversing
+           then } ;
+def 1 0 reverse
+  { size --  0  size 1 -  reversing } ;
+
+def 1 0 iota 
+  1 - { i --  i 0 < if  else  i v i set  i iota  then } ;
+
+def 1 0 loop 
+  1 - { i --  i 0 < if  else  vsize reverse  i loop then } ;

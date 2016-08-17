@@ -1,0 +1,14 @@
+\ Contributed by Luke Gorrie <luke@bluetail.com>
+\ Tit-For-Tat player: starts by choosing Rock, and then just chooses
+\ the same as the other player did last time.
+
+def 0 1 main
+    'r' emit flush-output       \ write first move (rock)
+    titfortat			\ start looping
+    0 ;
+
+def 0 0 titfortat
+    absorb -1 - if              \ if not at EOF:
+      absorb emit flush-output  \   echo opponent's previous move
+      titfortat                 \   and loop
+    then ;

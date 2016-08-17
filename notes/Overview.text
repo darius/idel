@@ -1,0 +1,77 @@
+Here's a quick summary of what I'm doing -- a virtual machine for safe
+portable code that leaves most of the work of optimization to
+whoever's producing the VM code, rather than to the VM implementation
+like the JVM does.  Further, it's low-level and relatively
+language-neutral and doesn't try to define a raft of standard
+libraries.  Buggy programs for this VM can run wild and scribble their
+own data space, like C programs, but can't affect anything outside
+except through explicitly granted capabilities.  (This includes CPU
+hogging -- you can give a program a limited amount of `fuel' to run on
+before it's terminated.)
+
+What's working right now is a straightforward interpreter in C and a
+compiler from a very limited subset of Forth.  To access external
+functions, you currently have to add new instructions to the VM --
+that's a stopgap until I add capabilities.
+
+You might ask why this is worth building -- isn't proof-carrying code
+the right answer for this sort of safety?  PCC is indeed nifty, but
+it's still kind of researchy.  I want to do something now that
+requires only engineering.  Also, PCC and portable binaries are
+orthogonal.  Consider the case where you want to suspend an arbitrary
+running program and resume execution on another node of the network --
+that would be really painful if it's in x86 machine code and the other
+node is a Sparc.  Therefore while the design should avoid any features
+that would make a type system or other proof stuff harder to add, it
+doesn't try to do PCC in the base system.  We should leave a path open
+to adding unsafe instructions that are allowed only when accompanied
+by a proof, for handling anything that's less efficient when going
+through an always-safe interface.  (Indirect calls are an example.)
+
+Okay, so what's it like?  It's a 32-bit Harvard-architecture stack
+machine where each procedure is required to have a deterministic stack
+effect.  The only way to write loops is with tail recursion.  The
+stack is not part of the main data space, so wild pointers can't muck
+it up.  This means we can follow a conventional procedure-calling
+model where most parameters are in hardware registers.
+
+Here's a sample function in the Idel assembly language:
+
+   : 2 1 umod   u/mod { quotient remainder -- remainder } ;
+
+This says ``define umod as a function, with 2 arguments and 1 result,
+that calls u/mod, names its return values `quotient' and `remainder',
+and returns the remainder.''  The arguments to the function are the
+same as the arguments to u/mod, namely a divisor and dividend.  (The u
+is for unsigned.)
+
+A more interesting function, Euclid's algorithm:
+
+   : 2 1 gcd 
+     { a b --  b 0 = if
+                 a
+               else
+                 b  a b umod  gcd
+               then } ;
+
+Obviously this is nice & convenient if you like Forth, but don't stack
+machines map poorly onto register-based hardware?  Well, that's why
+our stack effects are static.  This is more like the static
+single-assignment form that compilers use, and we know how to generate
+efficient code from that and how to convert imperative code like C
+into it.  There's still a question whether an efficient VM will need a
+serious register allocator in its guts, or the compiler can do most of
+the work.  Maybe that counts as research, actually...  But the
+question doesn't go away for a register VM, since the compiler won't
+know what hardware registers there are.
+
+That was the excuse for why a stack machine is acceptable, now what's
+the actual reason?  I just want to do whatever is dead-simple yet
+still works -- that's the philosophy throughout this project.
+
+That raises the question, wouldn't a safe higher-level language be
+simpler than software fault isolation?  Yes, it would, and you might
+prefer to go that way for your problem.  It's just not quite the
+problem I'm trying to solve -- I want something you could reasonably
+target C onto.  (On the other hand C is not the whole story -- I
+insist on supporting tail recursion, for example.)

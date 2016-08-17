@@ -1,0 +1,3 @@
+def 0 1 main   43 @ { x -- }  0 ;
+
+bss-data: foo 48

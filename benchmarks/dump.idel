@@ -1,0 +1,19 @@
+def 2 0 dump-loop
+  { a n -- n if  a @ x. a separator emit  a 4 +  n 1 -  dump-loop then } ;
+def 1 1 separator
+  4 +  31 and if  ' '  else  '\n'  then ;
+
+def 1 0 x.  7 x.loop ;
+def 2 0 x.loop 
+  { u n --  n if  u 4 >>>  n 1 -   x.loop  then
+            u 15 and  hex-digit emit } ;
+def 1 1 hex-digit
+  { u -- u 10 < if  '0'  else  'a' 10 -  then  u + } ;
+
+
+def 2 0 ascii-dump
+  { addr u --
+    u if
+      addr c@ emit
+      addr 1 +  u 1 -  ascii-dump
+    then } ;

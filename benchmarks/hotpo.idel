@@ -1,0 +1,6 @@
+def 0 1 main   60000
+         longest { L -- L u.  ' ' emit  L hotpo-period u. }  '\n' emit 
+         0 ;
+
+#include "../tests/udot.idel"
+#include "../tests/hotpo.idel"

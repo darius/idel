@@ -1,0 +1,4 @@
+def 1 1 fib
+  { n --  n 2 < if  1
+              else  n 1 - fib  n 2 - fib  +
+              then } ;

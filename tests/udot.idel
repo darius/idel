@@ -1,0 +1,6 @@
+def 2 1 u/     u/mod { quot rem -- quot } ;
+def 2 1 umod   u/mod { quot rem -- rem } ;
+
+def 1 0 u.
+  { u --  9 u u< if  u 10 u/ u.  then
+          u 10 umod  '0' + emit } ;

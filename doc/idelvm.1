@@ -1,0 +1,64 @@
+.TH idelvm 1
+.SH NAME
+idelvm \- runs Idel virtual machine programs
+.SH SYNOPSIS
+.B idelvm
+[
+.I option
+]...
+[
+.I file
+]
+.SH DESCRIPTION
+.PP
+.I idelvm
+runs an object file in the Idel virtual machine format.  If no file is
+specified in the arguments, it reads one in from standard input.
+.PP
+.I idelvm
+interprets the following options:
+.TP
+.B \-data \fIn\fP
+Set the data memory size in bytes, a positive integer.
+.TP
+.B \-fuel \fIn\fP
+Set the fuel supply, a nonnegative integer.  During execution, 
+every operation costs fuel, and a program that runs out is terminated.
+.TP
+.B \-help
+Display this list of options.
+.TP
+.B \-profile
+Turn on execution profiling.  The profile is written to stderr after
+the end of the run.  It has one line per basic block, giving the
+execution count, the index of the procedure definition it's in
+(starting from 0), and the internal opcodes of the basic block (which
+you are not expected to understand; this will be changed in a
+subsequent release).
+.TP
+.B \-stack \fIn\fP
+Set the stack size in words, a positive integer.
+.TP
+.B \-version
+Echo the version number to standard output, and exit.
+.SH "SEE ALSO"
+.PP
+.I idelasm
+(1), http://www.accesscom.com/~darius/software/idel/
+.SH DIAGNOSTICS
+.PP
+The exit status is between 0 and 127 if 
+.I idelvm
+successfully completes, and 128 or greater otherwise.  The status on
+success is the low 7 bits of whatever the given program returns as its
+status.  128 or greater may indicate a bad command-line argument or
+object file, or it may mean the given program performed an illegal
+operation or exceeded its resources.
+.br
+.SH BUGS
+Report any bugs, along with the shortest program
+that exposes them and the output of 
+.B idelvm \-version
+and 
+.B uname \-a
+, to darius@accesscom.com.

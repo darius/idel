@@ -1,0 +1,24 @@
+bytes: bar
+  1 2 3
+;bytes
+
+ints: foo
+  '*' 1 0
+;ints
+
+def 0 1 main 
+  0  0 c@ +
+     1 c@ +
+     2 c@ +
+     4 @ +
+     8 @ +
+     12 @ +
+     emit
+       '\n' emit 
+
+  bar '0' + emit
+  foo '0' + emit
+       '\n' emit
+  0 ;
+
+def 0 0 garbage ;

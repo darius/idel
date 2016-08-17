@@ -1,0 +1,123 @@
+        Idel: a virtual machine for mobile code
+        http://accesscom.com/~darius/software/idel/
+        Version 0.1.10
+
+        By Darius Bacon <darius@accesscom.com>
+        Distributed under the GNU Lesser General Public License; 
+        see the accompanying COPYING file for more details.
+
+
+QUICK START
+
+To build:               ./configure && make
+To test:                make test
+To run:                 ./run tests/hello.idel
+To install:             make install
+To remove:              make uninstall
+To start a jobber:      bin/jobber (executed from this directory)
+To stop it:             bin/kill-jobber
+
+
+ABOUT
+
+Idel is a virtual machine for safely and portably running untrusted
+code.  This is not a new programming language, but a substrate for
+existing ones.  It's designed to:
+
+ * be relatively language neutral
+ * control resource consumption
+ * support mobility and persistence
+ * need only an auditably small trusted computing base
+ * yield small object files and fast execution
+ * accommodate capability-based security in a coming release
+ * be easy to incorporate in other programs, the way Tcl is.
+
+See:
+ notes/Overview.text    for more motivation.
+ doc/tutorial.text      for an intro to Idel's assembly language.
+ man idelasm            about invoking the assembler.
+ man idelvm             about invoking the runtime.
+ examples/borednet      for an example application (CPU sharing)
+ examples/roshambo      for another amusing example (bot wars)
+ doc/specification.text for an (incomplete) virtual machine spec.
+
+This preview release isn't meant for serious use.  Some important
+features are missing, and others will change incompatibly later on.
+
+
+MANIFEST
+
+ doc/                   Man pages, tutorial, and specification.
+ examples/              Some small example programs.
+ src/                   The source code.
+ tests/                 Test cases.
+ benchmarks/            Microbenchmarks.
+ contrib/               Contributed code.
+ notes/                 Design notes, mostly to myself.
+
+
+PORTABILITY
+
+To build this, you need:
+
+ * GNU Make
+ * awk
+ * an ANSI C (C89) compiler
+
+Also, the borednet and roshambo examples use Python, and the test
+suite uses the C preprocessor (cpp) that ought to come with your C
+compiler but occasionally doesn't.
+
+It's been tested on the following systems:
+
+        CPU             OS               Compiler
+        -----------     ------------     ------------
+        Alpha           Linux 2.2        gcc 2.95.2
+        i386            FreeBSD 4.5      gcc 2.95.3
+        i686            Linux 2.0.36     gcc 2.95.4
+        i686            Linux 2.4        gcc 2.95.2
+        PowerPC G4      Darwin 5.4       gcc 2.95.2
+        RS/6000         Linux 2.4        gcc 2.95.2
+        Sparc Ultra60   Linux 2.2        gcc 2.95.2
+        Sparc R220      Solaris          gcc 2.95.2
+        Sparc R220      Solaris          Sun WorkShop 6 update 1 C 5.2 [1]
+
+[1] For Sun's compiler, you must set the -Xa option in CFLAGS to get
+it to expect ANSI C.  Changing -O2 to -fast looks like a good idea, too.
+
+Earlier versions were also tested on these, and may still work:
+
+        i586            FreeBSD 4.2      gcc 2.95.2
+        i686            Win2k/Cygwin     gcc 2.95.3-5
+        PowerPC         Darwin 1.2       gcc 2.7.2.1
+
+If it doesn't work out of the box for you, please let me know.  
+
+
+ACKNOWLEDGEMENTS
+
+Thanks to:
+
+ * erights.org and Shae Erisson for much-needed donations
+ * Luke Gorrie for roshambo and idelrun.el
+ * Steve Jenson, Ryan Ziegler, and Glyph Lefkowitz for test accounts
+
+
+LICENSE
+
+Idel mobile code virtual machine
+Copyright (C) 2001-2002  Darius Bacon
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307  USA

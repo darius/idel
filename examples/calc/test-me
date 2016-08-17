@@ -1,0 +1,21 @@
+#!/bin/sh
+d=examples/calc
+(
+echo ''          | bin/idelvm $d/calc &&
+echo '0'         | bin/idelvm $d/calc &&
+echo '42'        | bin/idelvm $d/calc &&
+echo '-42'       | bin/idelvm $d/calc &&
+echo '--42'      | bin/idelvm $d/calc &&
+
+echo ' 2+3'      | bin/idelvm $d/calc &&
+echo ' 5+4*-3+1' | bin/idelvm $d/calc 
+) >tmp-output
+
+echo '0
+0
+42
+-42
+42
+5
+-6' |
+diff tmp-output -

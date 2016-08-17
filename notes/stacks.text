@@ -1,0 +1,158 @@
+pickle trouble in stack-land:
+
+
+program   = [form]                  # a list of 0 or more forms
+form      = Bytes [i8]              # a data block
+          | Ints [i32]              # also a data block
+          | Defns [defn]            # procedures
+	  | Stack [frame]           # a pickled execution stack
+
+frame     = Frame return_pt [i32]   # a pickled stack frame
+return_pt = u32
+
+defn      = Defn signature code
+signature = Signature popping pushing
+popping   = u16 
+pushing   = u16
+code      = [stmt]                  # a list of 0 or more stmts
+
+stmt      = Primitive opcode        # a basic operation like + or -
+          | Push i32                # push a constant on the data stack
+          | Grab u16 code           # do code with local variables
+          | Local u16               # push the value of a local variable
+          | Call defn_num           # call a procedure
+          | Branch code0 code1      # pop a flag and do either code0 or code1
+
+defn_num  = u32                     # the index of a defn
+
+u32       = <unsigned 32-bit integer>
+i32       = <signed 32-bit integer>
+u16       = <unsigned 16-bit integer>
+i8        = <signed 8-bit integer>
+
+Each primitive has a signature; we list them all below.
+
+A valid Idel program must satisfy a static check that:
+
+  *  all values are in the range of their type:
+     each u16 is in 0..65535, etc.,
+     and each opcode is in the list below;
+  *  every Local references an enclosing Grab (i.e., its u16 is < the
+     sum of the u16's of all enclosing Grabs);
+  *  the defn_num in every Call is <= the highest defn index in the
+     defns block it appears in;
+  *  both parts of every Branch have the same stack effect;
+  *  each defn's stack effect matches its signature;
+  *  there's at least one defn, and the first one (i.e., the `main'
+     one) has signature (Signature 0 1).
+  *  it has at most one pickled stack, and if there's one it's
+     well-formed (see below) and comes after all the code it points
+     into.
+
+
+Pickled stack format:
+
+The frames in a pickled stack appear topmost first.  The bottommost
+frame must belong to a defn with signature like (Signature foo 1) --
+that is, it must yield one value, like a main defn.
+
+The return_pt of a frame represents the program point the calling code
+is suspended at.  There's such a point for every Call not in tail
+position and for every `save' primitive.  (FIXME: we should probably
+also number tail calls, so an external keeper could have a way of
+pickling a program that runs out of fuel, etc...  actually, to do that
+we need program points for just *before* the call.  But only in the
+topmost frame.  This sort of thing could be relevant for
+single-stepping too.)  These points are numbered starting at 0, from
+the *last* point in the first defn, back to the first point in that
+defn, then from last to first in the second defn, and so on.  (The
+reason for the backwards order is that code is represented in the same
+order in object files.)  Each such point has statically inferred for
+it a locals height, stack depth, and number of result values it
+expects from its callee.
+
+  result count: if the point is a `save' primitive, then the number is
+    1; else the point is a Call, and the number is n where 
+    (Signature m n) is the signature of the defn called.
+  stack depth: p-m, where (Signature p q) is the stack effect computed
+    by the above algorithm at this program point and m is as above.
+  locals height: the sum of the u32's of the Grabs enclosing the point.
+
+A frame's data -- the list of i32's -- consists of:
+
+  the locals -- h of them if h is the locals height above;
+  the stack -- p-m of them;
+  the leftovers -- as explained below.
+
+locals are topmost first (right?)  blahblah
+so are stack elements (right?)
+
+Consider two adjacent frames.  If the callee is a defn returning u
+values, and the caller expects a result count of v, then it's possible
+that u < v.  (This can happen when the caller calls a defn that pushes
+some values and then tail-calls the callee.)  In this case, there are
+v - u leftovers.
+
+Currently there's also a requirement that a stack be pickled only
+right after a `save' primitive and not include the -1 result that the
+`save' is expecting, but I should probably change that.
+
+
+		save	  i		save the current execution state)
+
+
+Loading:
+
+A virtual machine, given a well-formed program, may attempt to load
+it.  This requires code space, stack space, and data space.
+
+Code space: blahblah -- work out some rule for the official code-space
+size of a list of defns, so that a VM advertising itself to have n
+units of code space has a deterministic behavior wrt reaching the
+limit.  Maybe the rule should be allowed to vary.
+
+Stack space: the size of a frame is 4 * (1 + its number of i32's).
+The size of a pickled stack is the sum of the sizes of its frames,
+plus 4 for the -1 that's pushed as the value expected by the `save'
+primitive in the topmost frame.  (Also we need a check on the stack
+usage of the remainder of the code executed in the topmost frame.  The
+same goes for every other frame in a pickled stack.  Ouch!)  A VM
+should complain if asked to load a program with a bigger stack than
+the VM's stack size.
+
+Data space: on loading, the Bytes and Ints forms fill the data space
+consecutively from low addresses up.  If the current fill pointer is
+not at a 4-byte boundary when an Ints form is reached, it is adjusted
+forward to one and the skipped-over bytes are set to 0.  If there's
+more data than the VM's data size, it should complain.  If there's
+less, the remainder of data space is zero-filled.
+
+
+Execution:
+
+For a program with no pickled stack, the initial PC points to a tail
+call to the first defn.  (As if that tail call were part of the
+initial code, except it belongs to no defn and is considered to
+require no code space.)  (This seemingly superfluous call is included
+for the sake of fuel accounting -- so no real code is ever executed
+before a fuel check.)
+
+For a program with a pickled stack, the topmost frame must point to a
+`save' primitive.  A -1 value is pushed on the stack and the PC is set
+to the stmt after the `save'.  (blahblah: define what that means given
+that we've defined our code as a tree structure, not a list of
+stmts...)
+
+Hm, this is a bug -- you can get free cpu cycles by sending a program
+with a stack.  Ouch!  Do we add accounting here as a special case?
+I'd suggest that the fuel is considered to be decremented right after
+the `save' (whether we continue immediately or from the pickled
+state).  Hm, we need fuel checks on returns in the same way.  Without
+return fuel checks, a pickled program could run up to S*C instructions
+unmetered, where S is the number of frames and C is the total code
+size.  With return fuel checks, a well-behaved program is `unjustly'
+charged up to S fuel units -- much more acceptable.  If return fuel
+checks are always on, we increase fuel-checking costs up to
+approximately double in non-pickling runs (an extra check for every
+nontail call).
+

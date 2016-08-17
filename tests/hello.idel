@@ -1,0 +1,4 @@
+string: hello "Hello, world!\n"
+def 0 1 main   hello.addr hello.size type  0 ;
+
+#include "type.idel"

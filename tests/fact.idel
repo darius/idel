@@ -1,0 +1,12 @@
+def 0 1 main   5 fact u.  '\n' emit  0 ;
+
+#include "udot.idel"
+
+def 1 1 fact  1 fact-loop ;
+
+def 2 1 fact-loop
+  { n p --  n 0 = if 
+              p
+            else
+              n 1 -  p n *  fact-loop
+            then } ;

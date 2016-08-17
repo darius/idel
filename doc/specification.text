@@ -1,0 +1,176 @@
+The Idel specification, version 0.1.7.
+
+We start with an abstract syntax for Idel code that we'll later
+relate to the several different concrete representations.  We give it
+here in a Haskell-like notation.
+
+program   = [form]                  # a list of 0 or more forms
+form      = Bytes [i8]              # a data block
+          | Ints [i32]              # also a data block
+	  | Zeroes u32              # data block of u32 bytes, all 0
+          | Defns [defn]            # procedures
+
+defn      = Defn signature code
+signature = Signature popping pushing  
+popping   = u16                     # how many stack inputs
+pushing   = u16                     # how many stack outputs
+code      = [stmt]                  # a list of 0 or more stmts
+
+stmt      = Primitive opcode        # a basic operation like + or -
+          | Push i32                # push a constant on the data stack
+          | Grab u16 code           # run code with local variables
+          | Local u16               # push the value of a local variable
+          | Call defn_num           # call a procedure
+          | Branch code0 code1      # pop a flag and run either code0 or code1
+
+defn_num  = u32                     # the index of a defn
+
+u32       = <unsigned 32-bit integer>
+i32       = <signed 32-bit integer>
+u16       = <unsigned 16-bit integer>
+i8        = <signed 8-bit integer>
+
+Each primitive has a signature; we list them all below.
+
+A valid Idel program must satisfy a static check that:
+
+  *  all values are in the range of their type:
+     each u16 is in 0..65535, etc.,
+     and each opcode is in the list below;
+  * every Local references an enclosing Grab (i.e., its u16 is less
+     than the sum of the u16's of all enclosing Grabs);
+  *  the defn_num in every Call is <= the highest defn index in the
+     defns block it appears in;
+  *  both parts of every Branch have the same stack effect;
+  *  each defn's stack effect matches its signature;
+  *  there's at least one defn, and the first one (i.e., the `main'
+     one) has signature (Signature 0 1).
+
+
+Stack effects:
+
+  For a Primitive, the stack effect is the signature of its opcode.
+
+  For a Push or a Local, it's (Signature 0 1).
+
+  For (Grab u16 code), it's (Signature (u16+a) b) if the stack effect of
+  code is (Signature a b).
+
+  For a Call, it's the signature of the defn it references.
+
+  For a Branch, it's (Signature (a+1) b) if (Signature a b) is the
+  stack effect of code0 and of code1 (they must be the same).
+
+  For an empty code sequence, it's (Signature 0 0).
+
+  For a nonempty code sequence consisting of stmt followed by stmts,
+  first suppose the stack effect of stmt is (Signature a b) and the
+  stack effect of stmts is (Signature c d).  Then the overall stack
+  effect is 
+
+    Signature (a-b+c) d,       if b <= c;
+    Signature a       (b-c+d), if b > c.
+
+  For a defn, it's the stack effect of its code.
+
+
+Tail position:
+
+A stmt or code list is in tail position if one of:
+
+  * it's the entire code of a defn;
+  * it's the last stmt of a code list that's in tail position;
+  * it's the code of a Grab that's in tail position;
+  * or it's the code0 or code1 of a Branch that's in tail position.
+
+Otherwise it's not in tail position.
+
+
+Primitives:
+
+Here are the different opcodes that can appear in the Primitive stmt,
+above.  The inputs and outputs picture the top of the stack before and
+after each opcode executes, with the rightmost element being on top.
+We use the following codes:
+
+	i	signed integer
+	u	unsigned integer
+	f	flag (0 for false, -1 for true)
+	p	pointer
+
+Values don't carry a type; the codes just denote how an operation
+interprets each value.  All values are 32 bits wide.  Now for the
+list:
+
+	Inputs  Opcode	Outputs		Comment
+
+	i i	+	  i		sum
+	i i	-	  i		difference
+	i i	*	  i		signed product
+	u u	u*	  u		unsigned product
+	i i	/mod	i i		signed quotient and remainder
+	u u	u/mod	u u		unsigned quotient and remainder
+	u u	and	  u		bitwise AND
+	u u	or	  u		bitwise OR
+	u u	xor	  u		bitwise XOR
+	i u	<<	  i		left shift
+	i u	>>	  i		signed right shift
+	u u	>>>	  u		unsigned right shift
+	i i	=	  f		equality test
+	i i	<	  f		signed less-than test
+	u u	u<	  f		unsigned less-than test
+	  p	@	  i		fetch word
+	i p	!			store word
+	  p	c@	  i		fetch byte
+	i p	c!			store byte
+
+	(The following opcodes will be replaced later:
+	  i	emit			write a byte to stdout
+		absorb	  i		read a byte from stdin
+                flush-output            force any buffered output out)
+
+The detailed meaning of each opcode is currently documented only by
+the C code in ../src/opcodes.
+
+The signature of a primitive is (Signature m n) where m is the number
+of inputs in its line above, and n is the number of outputs.
+
+
+Loading:
+
+A virtual machine, given a well-formed program, may attempt to load
+it.  This requires code space and data space.
+
+Code space: blahblah -- work out some rule for the official code-space
+size of a list of defns, so that a VM advertising itself to have n
+units of code space has a deterministic behavior wrt reaching the
+limit.  Maybe the rule should be allowed to vary.  On reflection, I
+think we should weaken this to a requirement that a replay of
+execution will reach the limit at the exact same point.
+
+Data space: on loading, the Bytes, Ints, and Zeroes forms fill the
+data space consecutively from low addresses up.  If the current fill
+pointer is not at a 4-byte boundary when an Ints form is reached, it
+is adjusted forward to one and the skipped-over bytes are set to 0.
+If there's more data than the VM's data size, it should complain.  If
+there's less, the VM's data size is adjusted downwards to the amount
+of data given (but word-aligned).
+
+
+Execution:
+
+The initial PC points to a tail call to the first defn.  (As if that
+tail call were part of the initial code, except it belongs to no defn
+and is considered to require no code space.)  (This seemingly
+superfluous call is included for the sake of fuel accounting -- so no
+real code is ever executed before a fuel check.)
+
+blahblah requirement for fuel
+
+
+Representations:
+
+There are three concrete representations: source files, object files,
+and the forthcoming C API.
+
+blahblah

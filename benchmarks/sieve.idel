@@ -1,0 +1,38 @@
+#define eflag 8190
+bss-data: flags eflag
+
+def 0 1 main
+  499 iterations
+  primes u. '\n' emit  0 ;
+
+def 1 0 iterations
+  { i --  i if  primes { p -- }  i 1 - iterations then } ;
+
+def 0 1 primes
+  flags 8192 -1 fill
+  0 3 0 primes-loop ;
+
+def 3 1 primes-loop
+  { k addr --
+    addr eflag < if
+      addr c@ if
+        k addr +  k  strike-out
+        1 +
+      then
+      k 2 +  addr 1 +  primes-loop
+    then } ;
+def 2 0 strike-out
+  { addr inc --
+    addr eflag < if
+      0 addr c!
+      addr inc +  inc  strike-out
+    then } ;
+
+def 3 0 fill
+  { lo hi word --
+    lo hi < if
+      word lo !
+      lo 4 +  hi  word  fill
+    then } ;
+
+#include "../tests/udot.idel"

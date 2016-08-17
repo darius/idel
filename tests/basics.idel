@@ -1,0 +1,49 @@
+#define newline   '\n' emit
+
+def 0 1 main
+  (add) newline
+  (sub) newline
+  (mul) newline
+  (umul) newline 
+  (div) newline 
+  (udiv) newline 
+  (and) newline 
+  (or) newline 
+  (xor) newline 
+  (<<) newline 
+  (>>) newline 
+  (>>>) newline 
+  (eq) newline 
+  (lt) newline 
+  (ult) newline 
+\  (fetch) newline 
+\  (store) newline 
+\  (cfetch) newline 
+\  (cstore) newline 
+  0 ;
+
+#include "udot.idel"
+
+def 1 0 u.bl   u. ' ' emit ;
+def 1 0 . { n --   n 0 < if  '-' emit  0 n -  else  n  then u.bl } ;
+
+def 0 0 (add)   2 3 + .  2 -3 + .  2147483647 1 + . ;
+def 0 0 (sub)   2 3 - .  2 -3 - .  -2147483648 1 - . ;
+def 0 0 (mul)   42 -137 * . ;
+def 0 0 (umul)  42 -137 u* . ;  \ ha, same answer, right.  (till mixed precision)
+def 0 0 (div)   13 3 /mod . .  -13 3 /mod . .  13 -3 /mod . .  -13 -3 /mod . . ;
+def 0 0 (udiv)  13 3 u/mod u.bl u.bl ;
+def 0 0 (and)   32 96 and . ;
+def 0 0 (or)    32 96 or . ;
+def 0 0 (xor)   32 96 xor . ;
+def 0 0 (<<)    0 0 << .  1 8 << .  1 -1 << . ;
+def 0 0 (>>)    0 1 >> .  1 0 >> .  -5 1 >> .  32 4 >> . ;
+def 0 0 (>>>)   0 1 >>> .  1 0 >>> .  -5 1 >>> .  32 4 >>> . ;
+def 0 0 (eq)    32 32 = .  32 -32 = .  -32 32 = . ;
+def 0 0 (lt)    32 32 < .  32 -32 < .  -32 32 < . ;
+def 0 0 (ult)   32 32 u< .  32 -32 u< .  -32 32 u< . ;
+
+\def 0 0 (fetch) ;
+\def 0 0 (store) ;
+\def 0 0 (cfetch) ;
+\def 0 0 (cstore) ;

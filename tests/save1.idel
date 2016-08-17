@@ -1,0 +1,4 @@
+def 0 1 main   2 fib  save u.  ' ' emit u.  '\n' emit  0 ;
+
+#include "udot.idel"
+#include "fib.idel"

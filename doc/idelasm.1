@@ -1,0 +1,48 @@
+.TH idelasm 1
+.SH NAME
+idelasm \- assembles Idel virtual machine programs
+.SH SYNOPSIS
+.B idelasm
+[
+.I option
+]...
+[
+.I file
+]...
+.SH DESCRIPTION
+.PP
+.I idelasm
+reads each input file in turn and translates them all into a single
+object file in the Idel virtual machine format.  If no file is
+specified in the arguments, it uses standard input.  You can name the
+standard input explicitly in the command line as `\-'.  The object
+file is written to standard output.
+.PP
+.I idelasm
+interprets the following options:
+.TP
+.B \-comment \fIstring\fP
+Set the comment header line (empty by default).  It must contain no
+newline characters.
+.TP
+.B \-help
+Display this list of options.
+.TP
+.B \-version
+Echo the version number to standard output, and exit.
+.SH "SEE ALSO"
+.PP
+.I idelvm
+(1), http://www.accesscom.com/~darius/software/idel/
+.SH DIAGNOSTICS
+.PP
+The exit status is 0 if 
+.I idelasm
+successfully completes, and nonzero otherwise.
+.SH BUGS
+Report any bugs, along with the shortest program
+that exposes them and the output of 
+.B idelasm \-\-version
+and 
+.B uname \-a
+, to darius@accesscom.com.

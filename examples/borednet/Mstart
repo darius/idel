@@ -1,0 +1,190 @@
+#!/bin/bash
+#
+#  Copyright (c) 2002 Autonomous Zone Industries
+#  Copyright (c) 2002 Bryce "Zooko" Wilcox-O'Hearn
+#  This file is licensed under the
+#    GNU Lesser General Public License v2.1.
+#    See the file COPYING or visit http://www.gnu.org/ for details.
+#
+__cvsid="$Id: Mstart,v 1.1.1.1 2002/02/23 21:08:29 demoncrat Exp $"
+
+
+# XXX README README README
+# the following three functions: `findpython', `findEGTPdir' and `EGTPenvset' are copied from the `startscripts.ba.sh'
+# file.  If you fix a bug, please copy your fix back to the file so that people who use these functions in other scripts will benefit.  --Zooko 2001-08-10
+
+
+# This defines a function named `findpython' which takes no arguments.
+# It tries first the PYTHON environment variable, then uses `which' to try
+# several possible names for the executable interpreter (trying better/newer
+# version numbers first).
+# If it finds one, then it sets the PYTHON variable to point to the absolute path
+# to the interpeter. If it doesn't find it, it does `exit 1'.
+function findpython {
+    # Start with whatever is in "${PYTHON}".
+    # Test if it is really a python interpreter.
+    $PYTHON -c 'import sys; assert len(sys.version) > 0; sys.exit(77)' 2>/dev/null
+
+    if [ ! "X${?}" = "X77" ]; then
+        PYTHON=`which python2.2 2>/dev/null`
+        # Test if it is really a python interpreter.
+        $PYTHON -c 'import sys; assert len(sys.version) > 0; sys.exit(77)' 2>/dev/null
+
+        if [ ! "X${?}" = "X77" ]; then
+            PYTHON=`which python2.1 2>/dev/null`
+            # Test if it is really a python interpreter.
+            $PYTHON -c 'import sys; assert len(sys.version) > 0; sys.exit(77)' 2>/dev/null
+
+            if [ ! "X${?}" = "X77" ]; then
+                PYTHON=`which python 2>/dev/null`
+                # Test if it is really a python interpreter.
+                $PYTHON -c 'import sys; assert len(sys.version) > 0; sys.exit(77)' 2>/dev/null
+
+                if [ ! "X${?}" = "X77" ]; then
+                    PYTHON=`which python2 2>/dev/null`
+                    # Test if it is really a python interpreter.
+                    $PYTHON -c 'import sys; assert len(sys.version) > 0; sys.exit(77)' 2>/dev/null
+
+                    if [ ! "X${?}" = "X77" ]; then
+                        PYTHON=`which python2.0 2>/dev/null`
+                        # Test if it is really a python interpreter.
+                        $PYTHON -c 'import sys; assert len(sys.version) > 0; sys.exit(77)' 2>/dev/null
+
+                        if [ ! "X${?}" = "X77" ]; then
+                            PYTHON=`which python1.5 2>/dev/null`
+                            # Test if it is really a python interpreter.
+                            $PYTHON -c 'import sys; assert len(sys.version) > 0; sys.exit(77)' 2>/dev/null
+
+                            if [ ! "X${?}" = "X77" ]; then
+                                PYTHON=`which python1 2>/dev/null`
+                                # Test if it is really a python interpreter.
+                                $PYTHON -c 'import sys; assert len(sys.version) > 0; sys.exit(77)' 2>/dev/null
+
+                                if [ ! "X${?}" = "X77" ]; then
+                                    echo "PYTHON environment variable: ${PYTHON}, doesn't specify a working python interpreter, and I tried just invoking \`python2.2', \`python2.1', \`python', \`python2', \`python2.0', \`python1.5', and \`python1' and none of those worked either.  Giving up."
+                                    exit 1 # signal failure
+                                fi
+                            fi
+                        fi
+                    fi
+                fi
+            fi
+        fi
+    fi
+
+    export PYTHON
+}
+
+# precondition: the PYTHON variable must point to a good Python interpreter
+# precondition: either the EGTPDIR variable must contain the name of your 'EGTP/' directory, or the argument to the `findEGTPdir' function must be the relative path from the location of your script to the location of the 'EGTP/' directory.
+
+# This defines a function named `findEGTPdir' which takes one argument: the relative
+# path from the directory that contains this script to the EGTP dir.  The function tests 
+# whether the value in the EGTPDIR environment variable points to an EGTP dir 
+# that contains a working `EGTPyodel.ba.sh', and if not then it builds a path 
+# from the current working directory and the ${0}, which is the path for how the
+# current bash shell was invoked.
+
+# The default value of the "relative path" argument is "".
+
+# If it finds EGTPDIR, it sets the variable.  Else it does `exit 1'.
+
+function findEGTPdir {
+    if [ "X${1}" = "X" ]
+    then
+        RELP=""
+    else
+        RELP="${1}"
+    fi
+
+    # If ${EGTPDIR} is set, and EGTPyodel.ba.sh is found therein, then we are done.
+    # The name of the yodel script:
+    YODELLER="${EGTPDIR}/EGTPyodel.ba.sh"
+    YODEL=`${YODELLER} 2>/dev/null`
+    if [ "X${YODEL}" = 'XYodel, Weirdling!' ]
+    then
+        export EVILDIR
+        return 0
+    fi
+
+    FIRSTTRY="${EGTPDIR}"
+    # echo "using EGTPDIR == ${EGTPDIR} didn't work..."
+   
+    #  if that fails, derive EGTPDIR from $0 and $PWD, assuming that this file is sitting in the `EGTP/' dir.
+    EGTPDIR=`${PYTHON} -c "import os; print os.path.abspath(os.path.expandvars(os.path.expanduser(os.path.join(os.path.dirname(\"${0}\"), \"${RELP}\"))))"`
+
+    # The name of the yodel script:
+    YODELLER="${EGTPDIR}/EGTPyodel.ba.sh"
+    YODEL=`${YODELLER} 2>/dev/null`
+    if [ "X${YODEL}" = 'XYodel, Weirdling!' ]
+    then
+        export EGTPDIR
+        return 0
+    fi
+
+    echo "using EGTPDIR == ${FIRSTTRY} didn't work..."
+    echo "using EGTPDIR == ${EGTPDIR} didn't work..."
+
+    echo "Cannot find EGTPDIR, giving up."
+    exit 1
+}
+
+# Defines a function `EGTPenvset' which sets the PYTHONPATH environment variable 
+# so that EGTP.py can find the Python utility libraries that it needs.
+
+# precondition: the PYTHON variable must point to a good Python interpreter
+# precondition: the EGTPDIR variable must contain the name of your 'EGTP/' directory
+
+# variables:
+# PYTHON: Python interpreter executable
+# EGTPDIR: the 'EGTP/' directory
+# PYTHONPATH: path containing directories that have Python utility files in them.
+#     EGTPenvset() adds several absolute directories to PYTHONPATH, generated 
+#     from directory names relative to $EGTPDIR.
+# EGTPSTATEDIR: the directory that holds all the persistent EGTP Node state;  If 
+#     it is unset, `EGTPenvset' sets it to `~/.EGTP', and creates a new 
+#     directory there if one does not exist.  (Note: you can run any number of 
+#     nodes using the same EGTPSTATEDIR.)
+
+function EGTPenvset {
+    if [ "X${PYTHON}" = "X" ]; then
+        echo "error -- someone forgot to set PYTHON before trying to use EGTPenvset"
+        exit 1
+    fi
+   
+    if [ "X${EGTPDIR}" = "X" ]; then
+        echo "error -- someone forgot to set EGTPDIR before trying to use EGTPenvset"
+        exit 1
+    fi
+   
+    # echo "0 == ${0}"
+    # echo "PWD == ${PWD}"
+   
+    # echo EGTPDIR == "${EGTPDIR}"
+   
+    NEWPYTHONPATH=`${PYTHON} -c " 
+import os, string 
+pp=string.split(os.environ.get('PYTHONPATH', ''), ':') 
+for np in [ \"${EGTPDIR}/../libbase32\",\"${EGTPDIR}/../pyutil\", \"${EGTPDIR}/../mojoasyncore\", \"${EGTPDIR}/common\", \"${EGTPDIR}/common/crypto/Python\", \"${EGTPDIR}/PythonLibs\", ]: 
+    if not np in pp: pp.insert(0, os.path.abspath(os.path.expandvars(os.path.expanduser(np)))) 
+print string.join(pp, ':') 
+"`
+
+    # echo NEWPYTHONPATH == ${NEWPYTHONPATH}
+    export PYTHONPATH=${NEWPYTHONPATH}
+
+    if [ "X${EGTPCONFDIR}" = "X" ]; then
+        export EGTPCONFDIR="${HOME}/.EGTP"
+    fi
+}
+
+
+findpython
+findEGTPdir
+EGTPenvset
+
+# echo "PYTHON $PYTHON"
+# echo "EGTPDIR $EGTPDIR"
+# echo "PYTHONPATH $PYTHONPATH"
+
+eval ${*}

@@ -1,0 +1,41 @@
+
+
+
+: u/     [-0+0] u/mod [-2+2] { quot rem } [-2+0] quot [-2+1] ;
+: /mod   [-1+0] u/mod [-2+2] { quot rem } [-2+0] rem [-2+1] ;
+
+Stack effect for u. is (pop n, push n+d)
+
+: u. [-0+0] { u } [-1+0]
+  9 [-1+1] u [-1+2] u< [-1+1] if
+    [-1+0] u [-1+1] 10 [-1+2] u/ [-1+1] u. [-x+y]  then
+  [where x = max(1, n-1) and y = 1+d]
+  [-1+0] [x=1,y=0]
+  etc... ;
+
+
+[-x+y] followed by (pop n, push n+d) is: [-max(x,n-y)+(y+d)]
+
+so n = constant
+     | max(n,n-y)
+   d = constant
+     | y+d
+
+Let's represent everything as stack deltas, instead:
+
+[md,d] [me,e] -> [min(md,d+me), d+e]
+
+delta ::= constant
+       |  variable
+       |  delta+delta
+       |  min(delta, delta)
+
+equation ::= (delta = delta)
+
+We construct equations at two places: function entries and conditional
+joins.  We want to compute a least fixed point of a system of
+equations.  It doesn't necessarily exist.
+
+Also if we allow separate compilation we'll need stack-effect
+declarations anyway.  So we might as well just add them in now, and
+use them.

@@ -1,0 +1,6 @@
+def 0 1 main   flooey  u. ' ' emit  u. '\n' emit  0 ;
+
+def 0 2 flooey  42 gooey ;
+def 0 1 gooey   save ;
+
+#include "udot.idel"

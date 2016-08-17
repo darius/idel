@@ -1,0 +1,79 @@
+should we use DIME?
+http://www.ietf.org/internet-drafts/draft-nielsen-dime-00.txt
+
+the below is out of date.
+
+
+Here's the object-file format.  Its design goals:
+
+- Simple, compact, and quick to read in a forward stream.
+- It should be possible to start running the code before the whole
+  stream is read in.
+- Extensible later with more types of info.
+- Yet it should not require understanding fancy later attributes 
+  for correct basic functioning.
+- It should be possible for a reader to seek to later sections without
+  having to read and parse the contents of earlier ones.
+
+Nongoals:
+
+- You currently can't stream a file *out* incrementally in chunks
+  smaller than a block (though you can make 1-element blocks if you
+  need that).
+- We don't define any linking info yet -- you can only represent
+  closed programs.  (But we'll have to work this out fairly soon
+  to have an FFI.)
+
+Notes:
+
+- Words in CAPITALS are tags.  Block tags are uints, while opcode tags
+  are ubytes.
+- A count is a uint denoting how many bytes follow.
+- A uint is an unsigned 32-bit integer, encoded as below.
+- An int is a signed 32-bit integer, ditto.
+- foo* means a sequence of 0 or more foo's.
+- We'll probably want to add a bit more stuff to the header...
+
+
+ofmt = header block*
+
+header = magic major minor
+
+magic = byte byte byte byte    ; `Frot' = 0x46726f74
+major = uint
+minor = uint
+
+block = DEFNS count defns
+      | BYTES count byte*
+      | INTS count int*
+; The reason we have both BYTES and INTS is that we need to store raw
+; bytes when the object file is a self-extracting compressed file, but
+; bytes are often not very compact in other applications -- typically
+; they'd be encoding small integers as 4-byte chunks.
+
+; The uint counts how many stackeffects and defns follow.
+; (There must be the same number of each.)
+defns = uint stackeffect* defn*
+defn = count op*
+; The ops are in reverse order of execution, i.e. last one first.
+
+; A stack effect is two 16-bit unsigned ints: the count popped and 
+; the count pushed.  It's encoded as a uint by interleaving the bits,
+; instead of concatenating them.  That is so `normal' stack effects
+; are represented in a uint that encodes as just one byte.
+; Any fp stack effect has to go in an attribute instead (we presume fp
+; words are rare).
+stackeffect = uint
+
+op = CALL int		; relative to current word#, 0 = recurse
+   | PUSH int
+   | ADD
+   | ...
+
+; Encoding for uint and int:
+(Big-endian.  Sign-extension depends on the type of the value.)
+0nnnnnnn = 7 bits
+1nnnnnnn 1nnnnnnn = 14 bits
+1nnnnnnn 1nnnnnnn 0nnnnnnn = 21 bits
+1nnnnnnn 1nnnnnnn 1nnnnnnn 0nnnnnnn = 28 bits
+1XXXnnnn 1nnnnnnn 1nnnnnnn 1nnnnnnn 0nnnnnnn = 32 bits

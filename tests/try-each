@@ -1,0 +1,11 @@
+#!/bin/sh
+action=$1
+shift
+
+for p in "$@"
+do 
+	if tests/$action "$p"
+	then echo "passed: $p"
+	else echo "*** failed: $p ***"; exit 1
+	fi
+done

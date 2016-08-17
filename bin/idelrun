@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# We use a temp file instead of a pipe so that the program run by
+# idelvm can read stdin.  If you want to pass any arguments to idelvm,
+# you'll need to call it explicitly.
+# (TODO: parse out idelvm arguments)
+
+tmpfile=/tmp/idel-$$
+trap 'rm -f $tmpfile; exit 1' 1 2 15	# to clean up the file after
+
+cppidelasm "$@" >$tmpfile && idelvm $tmpfile
+status=$?
+rm -f $tmpfile
+exit $status

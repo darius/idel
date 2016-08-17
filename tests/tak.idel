@@ -1,0 +1,8 @@
+def 3 1 tak
+  { x y z --  y x < if
+		x 1 - y z tak
+		y 1 - z x tak
+		z 1 - x y tak  tak
+              else 
+                z
+	      then } ;

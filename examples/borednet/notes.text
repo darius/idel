@@ -1,0 +1,128 @@
+what's a good app to demo?  ideally, it's:
+
+- easy to implement
+- something some significant number of hackers will want to use
+- embarrassingly parallel
+
+so:
+
+- trivial factoring example
+
+- cryptanalysis
+  hashcash in particular
+
+- simulations
+  ok, but specifically?
+
+- machine learning
+  ok, but specifically?
+
+- raytracing
+  needs floating point, lots of work
+  is there a raytracer with a backend I could adapt easily?
+
+- traveling salesman
+  not very exciting
+
+- game tree search
+  needs quick responses to be useful
+
+- superopt
+  limited audience
+
+- SAT
+  too esoteric
+
+
+
+
+agenda:
+
+read up on spot-checking in sabotage-tolerance-mechanisms-for.ps.gz
+also sarmenta99bayanihan.ps.gz
+and locust*.ps.gz
+tschudin97open.ps.gz
+/home/me/src/refs-for-froth/others/pldi96-omniware.ps.gz
+need to read up on heterogenous process migration
+see what free c compilers there are besides gcc and lcc.
+
+- on pending job list, record when started, who got it, etc.
+- fix getNextJob() to also get jobs off the pending and failed lists
+
+1 add a built in referral list
+- add messages to/from other dealers about busy-ness
+- jobber should report resource availability, dealer should parse it
+  - instructions/second
+  - memory allowed
+  - max program size
+  - max output size
+  - bandwidth
+
+- test that `go bug foo' works
+
+- usage messages
+
+- integrate Mstart script
+
+- timeout on socket waiting
+
+1 announce on freshmeat
+
+1 a more interesting example (hashcash)
+
+- dealer needs limit on size of answer returned
+
+- standard interface for monitoring progress of a task
+
+4 jobber's idelvm should run without read, save capabilities
+
+4 add floating point to idel
+
+4 improve the idel api (error handling)
+  review the tcl and python apis
+
+- jobber ought to have a way of telling when to go completely idle,
+  not just be nice
+  (platform-dependent)
+
+- get it working on windows
+
+? make windows and mac packages
+
+1 unit tests with malicious peers
+
+- use real swiss numbers
+
+- dealer keeps a jobber blacklist
+
+- dealer can send out jobs multiple times for double-checking
+
+- dealer maintains its data structures intelligently so they don't get
+  too huge
+
+- encrypted transport
+- protocol with version info
+  http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/*checkout*/mojonation/evil/hackerdocs/EGTP.html?rev=HEAD&content-type=text/html
+
+- both jobbers and dealers should keep a persistent list of dealers
+  they can contact
+
+- fix the jobber's delay to come *after* closing the socket.  argh.
+  maybe this would be easier with EGTP?
+
+- add messages to protocol: "I'm being interrupted", "I gave up",
+  "Don't bother"
+
+
+done:
+
+1 clean up pending-jobs/tasks data structures
+- have getNextJob() return just a job and its swiss number
+- remove getId() methods, use fake swiss numbers instead
+- add a method to jobs to estimate how long it should take
+
+1 jobber needs limits on bandwidth consumption, amount of total output
+(only half done)
+
+1 get friends & acquaintances to run it
+

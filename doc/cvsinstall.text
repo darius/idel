@@ -1,0 +1,40 @@
+#!/bin/sh
+
+# Here's how to cvs checkout and compile Idel on a Unix:
+
+# DEPENDENCIES:
+# First, acquire all the necessary packages.
+# REQUIRED: C compiler, GNU make, awk.
+# REQUIRED for borednet: Python interpreter.
+# RECOMMENDED: we use GCC 2.95.2 and gnumake 3.79.1.  We recommend python 2.2.
+
+# Users of debian can enter the following command line to get these packages:
+# sudo apt-get install cvs python-dev make gcc mawk
+# Users of other Linuxes or Unixes can do your equivalent of that line.
+
+# BUILDING AND RUNNING IT
+# Then you can execute the rest of this script as a shell script, or
+# read it and cut and paste the commands into your shell.
+
+# You need to read on only if something fails, if you are curious
+# about different options.
+
+mkdir idelcvs
+cd idelcvs
+
+touch ${HOME}/.cvspass
+if [ "X`grep anonymous@cvs.idel ${HOME}/.cvspass`" = "X" ]; then
+   echo ":pserver:anonymous@cvs.idel.sourceforge.net:/cvsroot/idel A" >>${HOME}/.cvspass
+fi
+
+cvs -z3 -d:pserver:anonymous@cvs.idel.sourceforge.net:/cvsroot/idel co idel 
+
+# If you have already checked out the idel module, then instead of
+# "co"'ing idel here, you run "cvs update -Pd idel".
+
+cd idel
+./configure
+make
+
+# This file was modified from the corresponding Mnet file:
+# http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/mnet/mnet/hackerdocs/cvsinstall.txt?rev=HEAD&content-type=text/vnd.viewcvs-markup

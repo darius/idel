@@ -1,0 +1,18 @@
+Roshambo Game
+========================================
+
+This package includes a game engine and some example contestants.
+
+roshambo.py is the Python source for game engine. It includes a
+description of the simple stdio-based protocol.
+
+*.idel are the example robots.
+
+"make test" will run a test tournament (see Makefile for how to invoke
+the engine).
+
+NOTE: You need to install Idel first (or change this Makefile to refer
+to your local copy of the idelvm/idelasm binaries).
+
+So: read the code, write a robot, and kick some bottom! Robots should
+be "submitted" on IRC, in either source (.idel) or binary (.bot) form.

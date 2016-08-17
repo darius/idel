@@ -1,0 +1,564 @@
+Tue Dec 11 07:33:10 PST 2001
+Error: Reference out of range
+Command exited with non-zero status 1
+real 0.00
+user 0.00
+sys 0.00
+Tue Dec 11 07:35:15 PST 2001
+real 4.49
+user 3.83
+sys 0.26
+Tue Dec 11 07:45:23 PST 2001
+real 4.09
+user 3.86
+sys 0.16
+Tue Dec 11 08:14:19 PST 2001
+real 4.47
+user 3.79
+sys 0.26
+Wed Dec 12 05:29:13 PST 2001
+real 4.17
+user 3.91
+sys 0.17
+Thu Dec 13 07:44:58 PST 2001
+real 6.60
+user 3.90
+sys 0.30
+Thu Dec 13 08:11:27 PST 2001
+real 4.46
+user 3.78
+sys 0.19
+Thu Dec 13 08:26:18 PST 2001
+real 4.66
+user 3.74
+sys 0.29
+Fri Dec 14 20:45:49 PST 2001
+real 4.23
+user 3.77
+sys 0.22
+Sat Dec 15 12:36:55 PST 2001
+real 6.00
+user 3.80
+sys 0.21
+Tue Dec 18 04:56:45 PST 2001
+real 4.14
+user 3.87
+sys 0.14
+Tue Dec 18 06:16:09 PST 2001
+real 4.86
+user 3.73
+sys 0.33
+Tue Dec 18 10:39:29 PST 2001
+real 5.23
+user 4.19
+sys 0.19
+Tue Dec 18 10:43:52 PST 2001
+real 4.42
+user 4.09
+sys 0.23
+Thu Dec 20 04:23:56 PST 2001
+real 4.65
+user 3.77
+sys 0.22
+Tue Jan  1 16:26:23 PST 2002
+real 1.38
+user 1.33
+sys 0.06
+Sun Jan 13 07:31:18 PST 2002
+real 4.06
+user 3.74
+sys 0.14
+Sun Jan 13 07:34:46 PST 2002
+real 5.21
+user 3.81
+sys 0.17
+Tue Jan 15 20:33:18 PST 2002
+real 4.33
+user 3.72
+sys 0.29
+Wed Jan 16 14:25:10 PST 2002
+real 3.99
+user 3.62
+sys 0.34
+Thu Jan 24 04:29:09 PST 2002
+real 4.01
+user 3.85
+sys 0.11
+Thu Jan 24 05:21:08 PST 2002
+real 4.02
+user 3.79
+sys 0.22
+Thu Jan 24 06:06:00 PST 2002
+real 4.18
+user 3.95
+sys 0.22
+Thu Jan 24 06:09:40 PST 2002
+real 4.19
+user 3.94
+sys 0.22
+Thu Jan 24 06:39:20 PST 2002
+real 4.27
+user 3.79
+sys 0.26
+Thu Jan 24 10:35:46 PST 2002
+real 4.50
+user 3.81
+sys 0.20
+Fri Jan 25 03:59:44 PST 2002
+real 4.14
+user 3.85
+sys 0.21
+Fri Jan 25 04:05:06 PST 2002
+real 3.99
+user 3.91
+sys 0.09
+Fri Jan 25 04:22:22 PST 2002
+real 4.14
+user 3.87
+sys 0.20
+Fri Jan 25 04:25:18 PST 2002
+real 3.99
+user 3.76
+sys 0.23
+Fri Jan 25 04:37:53 PST 2002
+real 4.17
+user 3.77
+sys 0.26
+Fri Jan 25 18:56:14 PST 2002
+real 4.29
+user 3.89
+sys 0.14
+Fri Jan 25 19:07:10 PST 2002
+real 4.00
+user 3.76
+sys 0.19
+Fri Jan 25 22:22:18 PST 2002
+real 4.34
+user 3.72
+sys 0.37
+Fri Jan 25 22:38:48 PST 2002
+real 4.27
+user 3.79
+sys 0.17
+Fri Jan 25 22:44:48 PST 2002
+real 3.90
+user 3.66
+sys 0.24
+Fri Jan 25 23:00:34 PST 2002
+real 3.94
+user 3.71
+sys 0.19
+Sun Jan 27 01:24:42 PST 2002
+real 3.99
+user 3.74
+sys 0.21
+Sun Jan 27 01:32:45 PST 2002
+real 4.25
+user 3.67
+sys 0.36
+Sun Jan 27 02:05:32 PST 2002
+real 3.90
+user 3.69
+sys 0.22
+Sun Jan 27 02:57:06 PST 2002
+real 3.98
+user 3.66
+sys 0.24
+Sun Jan 27 18:51:02 PST 2002
+real 4.54
+user 3.78
+sys 0.20
+Sun Jan 27 19:15:23 PST 2002
+real 4.07
+user 3.72
+sys 0.33
+Sun Jan 27 19:59:39 PST 2002
+real 3.99
+user 3.75
+sys 0.20
+Sun Jan 27 20:26:26 PST 2002
+real 3.90
+user 3.77
+sys 0.14
+Sun Jan 27 21:06:16 PST 2002
+real 3.93
+user 3.65
+sys 0.24
+Sun Jan 27 21:08:44 PST 2002
+real 3.17
+user 2.98
+sys 0.19
+Sun Jan 27 21:53:24 PST 2002
+real 3.48
+user 3.04
+sys 0.26
+Sun Jan 27 22:05:06 PST 2002
+real 3.26
+user 2.99
+sys 0.20
+Mon Jan 28 01:58:29 PST 2002
+real 3.45
+user 2.97
+sys 0.35
+Mon Jan 28 02:01:57 PST 2002
+real 3.18
+user 2.92
+sys 0.26
+Mon Jan 28 02:20:10 PST 2002
+real 3.52
+user 3.08
+sys 0.15
+Mon Jan 28 02:39:21 PST 2002
+real 3.33
+user 2.93
+sys 0.22
+Mon Jan 28 03:21:59 PST 2002
+real 4.11
+user 3.65
+sys 0.26
+Mon Jan 28 03:33:03 PST 2002
+real 0.00
+user 0.01
+sys 0.00
+Mon Jan 28 03:41:53 PST 2002
+real 5.36
+user 5.03
+sys 0.21
+Mon Jan 28 04:00:42 PST 2002
+real 3.06
+user 2.95
+sys 0.12
+Mon Jan 28 04:15:34 PST 2002
+real 3.05
+user 2.84
+sys 0.21
+Mon Jan 28 04:31:18 PST 2002
+real 3.72
+user 3.55
+sys 0.17
+Mon Jan 28 04:34:18 PST 2002
+real 3.77
+user 3.48
+sys 0.18
+Mon Jan 28 04:37:54 PST 2002
+real 3.06
+user 2.84
+sys 0.22
+Mon Jan 28 04:42:37 PST 2002
+real 3.19
+user 2.92
+sys 0.20
+Mon Jan 28 22:41:58 PST 2002
+real 3.27
+user 2.89
+sys 0.36
+Tue Jan 29 20:15:31 PST 2002
+real 3.63
+user 2.99
+sys 0.17
+Tue Jan 29 20:16:46 PST 2002
+real 3.15
+user 2.91
+sys 0.21
+Thu Jan 31 00:49:22 PST 2002
+real 3.38
+user 2.94
+sys 0.32
+Thu Jan 31 00:51:50 PST 2002
+real 3.98
+user 3.66
+sys 0.24
+Thu Jan 31 00:55:51 PST 2002
+real 5.35
+user 5.04
+sys 0.22
+Thu Jan 31 01:03:29 PST 2002
+real 3.22
+user 2.87
+sys 0.23
+Thu Jan 31 01:05:16 PST 2002
+real 3.41
+user 2.92
+sys 0.17
+Thu Jan 31 01:06:48 PST 2002
+real 3.15
+user 2.91
+sys 0.17
+Thu Jan 31 02:38:46 PST 2002
+real 3.99
+user 3.77
+sys 0.16
+Thu Jan 31 02:44:16 PST 2002
+real 3.19
+user 2.86
+sys 0.24
+Thu Jan 31 02:47:49 PST 2002
+real 3.30
+user 2.88
+sys 0.21
+Thu Jan 31 02:49:43 PST 2002
+real 3.19
+user 2.97
+sys 0.12
+Thu Jan 31 02:51:53 PST 2002
+real 3.21
+user 2.80
+sys 0.27
+Thu Jan 31 02:54:22 PST 2002
+real 3.27
+user 2.85
+sys 0.25
+Thu Jan 31 02:55:41 PST 2002
+real 3.11
+user 2.95
+sys 0.13
+Thu Jan 31 02:57:06 PST 2002
+real 3.15
+user 2.88
+sys 0.22
+Thu Jan 31 02:58:38 PST 2002
+real 3.31
+user 2.90
+sys 0.28
+Thu Jan 31 03:16:10 PST 2002
+real 3.20
+user 2.86
+sys 0.23
+Thu Jan 31 03:40:01 PST 2002
+real 6.00
+user 5.03
+sys 0.26
+Thu Jan 31 03:42:24 PST 2002
+real 5.02
+user 4.31
+sys 0.29
+Thu Jan 31 03:47:13 PST 2002
+real 5.00
+user 3.93
+sys 0.22
+Thu Jan 31 03:48:39 PST 2002
+real 5.05
+user 3.16
+sys 0.34
+Thu Jan 31 03:49:57 PST 2002
+real 4.27
+user 3.19
+sys 0.26
+Thu Jan 31 03:51:11 PST 2002
+real 4.10
+user 3.12
+sys 0.20
+Thu Jan 31 03:52:40 PST 2002
+real 5.76
+user 3.15
+sys 0.25
+Thu Jan 31 03:54:10 PST 2002
+real 4.30
+user 3.11
+sys 0.28
+Thu Jan 31 03:55:52 PST 2002
+real 5.50
+user 2.90
+sys 0.29
+Thu Jan 31 03:57:24 PST 2002
+real 5.51
+user 3.10
+sys 0.27
+Thu Jan 31 03:59:05 PST 2002
+real 5.52
+user 3.07
+sys 0.24
+Thu Jan 31 04:25:35 PST 2002
+real 4.20
+user 3.03
+sys 0.22
+Thu Jan 31 04:27:02 PST 2002
+real 5.43
+user 3.03
+sys 0.29
+Thu Jan 31 04:28:31 PST 2002
+real 5.28
+user 3.14
+sys 0.15
+Thu Jan 31 04:29:53 PST 2002
+real 4.29
+user 3.07
+sys 0.25
+Thu Jan 31 04:31:17 PST 2002
+real 4.54
+user 3.11
+sys 0.22
+Thu Jan 31 04:32:41 PST 2002
+real 4.35
+user 3.04
+sys 0.28
+Thu Jan 31 04:34:04 PST 2002
+real 5.01
+user 3.19
+sys 0.24
+Thu Jan 31 04:35:32 PST 2002
+real 5.18
+user 3.70
+sys 0.22
+Fri Feb  1 00:51:28 PST 2002
+real 5.76
+user 3.65
+sys 0.26
+Fri Feb  1 00:53:14 PST 2002
+real 6.12
+user 3.68
+sys 0.24
+Fri Feb  1 00:54:13 PST 2002
+real 5.72
+user 3.66
+sys 0.26
+Fri Feb  1 00:58:18 PST 2002
+real 6.10
+user 3.70
+sys 0.23
+Fri Feb  1 01:22:35 PST 2002
+real 6.16
+user 3.68
+sys 0.29
+Fri Feb  1 23:46:35 PST 2002
+real 5.90
+user 4.03
+sys 0.36
+Sat Feb  2 00:00:55 PST 2002
+real 4.14
+user 3.76
+sys 0.20
+Sat Feb  2 07:06:48 PST 2002
+real 4.07
+user 3.71
+sys 0.36
+Sat Feb  2 07:10:29 PST 2002
+real 3.95
+user 3.79
+sys 0.16
+Sun Feb  3 00:07:33 PST 2002
+real 3.98
+user 3.67
+sys 0.30
+Sun Feb  3 00:11:04 PST 2002
+real 4.18
+user 3.58
+sys 0.41
+Sun Feb  3 00:34:33 PST 2002
+real 4.17
+user 3.61
+sys 0.27
+Sun Feb  3 08:49:52 PST 2002
+real 4.41
+user 3.61
+sys 0.35
+Sun Feb  3 12:20:10 PST 2002
+real 4.54
+user 3.62
+sys 0.27
+Sun Feb  3 12:21:37 PST 2002
+real 3.86
+user 3.68
+sys 0.18
+Sun Feb  3 17:18:46 PST 2002
+real 4.14
+user 3.60
+sys 0.28
+Sun Feb  3 17:47:37 PST 2002
+real 4.01
+user 3.65
+sys 0.22
+Sun Feb  3 19:11:59 PST 2002
+real 4.72
+user 3.71
+sys 0.29
+Sun Feb  3 19:42:54 PST 2002
+real 4.62
+user 3.54
+sys 0.45
+Mon Feb  4 06:25:48 PST 2002
+real 4.82
+user 3.64
+sys 0.37
+Wed Feb 13 02:41:43 PST 2002
+real 5.07
+user 3.65
+sys 0.39
+Wed Feb 13 20:54:54 PST 2002
+real 4.61
+user 3.72
+sys 0.19
+Wed Feb 13 20:56:43 PST 2002
+real 4.21
+user 3.61
+sys 0.27
+Mon Feb 18 20:20:46 PST 2002
+real 4.43
+user 3.66
+sys 0.38
+Wed Apr  3 02:41:19 PST 2002
+Wed Apr  3 02:42:43 PST 2002
+real 3.91
+user 3.70
+sys 0.20
+Sat May  4 22:57:22 PDT 2002
+real 4.62
+user 3.87
+sys 0.32
+Sat May  4 23:02:59 PDT 2002
+real 7.90
+user 7.11
+sys 0.29
+Sat May  4 23:43:24 PDT 2002
+real 4.32
+user 3.61
+sys 0.43
+Sun May  5 00:01:15 PDT 2002
+real 4.40
+user 3.76
+sys 0.17
+Sun May  5 01:38:01 PDT 2002
+real 5.45
+user 3.72
+sys 0.32
+Sun May  5 01:50:04 PDT 2002
+real 4.90
+user 3.71
+sys 0.35
+Sun May  5 03:51:55 PDT 2002
+Command terminated by signal 2
+real 5.13
+user 3.57
+sys 0.18
+Sun May  5 03:52:40 PDT 2002
+real 5.25
+user 3.66
+sys 0.37
+Fri May 10 02:07:02 PDT 2002
+real 4.36
+user 3.66
+sys 0.33
+Fri May 10 14:59:20 PDT 2002
+real 6.76
+user 3.71
+sys 0.29
+Sat May 11 01:00:11 PDT 2002
+real 4.26
+user 3.78
+sys 0.26
+Mon May 13 19:56:33 PDT 2002
+real 1.43
+user 1.36
+sys 0.08
+Tue Jun 25 13:12:48 PDT 2002
+real 4.22
+user 3.74
+sys 0.18
+Sat Jul 27 02:03:53 PDT 2002
+real 5.29
+user 4.18
+sys 0.30
+Wed Jul 31 01:37:09 PDT 2002
+real 5.41
+user 4.19
+sys 0.32

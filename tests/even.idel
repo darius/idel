@@ -1,0 +1,9 @@
+def 0 1 main   42 even? u.  '\n' emit  0 ;
+
+#include "udot.idel"
+
+def 0 1 true   -1 ;
+def 0 1 false   0 ;
+
+def 1 1 even? { n --  n 0 = if  true  else  n 1 - odd?  then } ;
+def 1 1 odd?  { n --  n 0 = if  false else  n 1 - even? then } ;

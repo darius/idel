@@ -1,0 +1,40 @@
+def 0 1 beer   23 drinking  0 ;
+
+#include "udot.idel"
+#include "type.idel"
+
+def 0 0 cr   '\n' emit ;
+
+
+string: no-more  "No more bottles"
+string: 1-bottle "1 bottle"
+string: bottles  " bottles"
+
+def 1 0 .how-many
+  { bottles --       bottles 0 = if  no-more.addr no-more.size
+                else bottles 1 = if  1-bottle.addr 1-bottle.size
+                else                 bottles u.  bottles.addr bottles.size
+                then then            type } ;
+
+string: of-beer " of beer"
+
+def 1 0 .bottles   .how-many  of-beer.addr of-beer.size type ;
+
+string: on-the-wall  " on the wall,"
+string: goto-store   "Go to the store, and buy some more!"
+string: on-the-wall. " on the wall."
+string: if-fall      "If one of those bottles should happen to fall,"
+
+def 1 0 drinking
+  { bottles --
+      bottles .bottles  on-the-wall.addr on-the-wall.size type cr
+      bottles .bottles  '!' emit cr
+      bottles 0 = if
+	goto-store.addr goto-store.size type cr
+	23 .bottles  on-the-wall..addr on-the-wall..size type cr
+      else
+	if-fall.addr if-fall.size type cr
+	bottles 1 - .bottles  on-the-wall..addr on-the-wall..size type cr
+	cr
+	bottles 1 - drinking 
+      then } ;

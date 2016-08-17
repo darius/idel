@@ -1,0 +1,22 @@
+def 0 1 main   2 test-primes  '\n' emit  0 ;
+
+def 2 1 umod   
+  u/mod { quot rem -- rem } ;
+
+def 2 1 divides?
+  { divisor n --  n divisor umod  0 = } ;
+
+def 2 1 dividing 
+  { n k --        n  k k *  < if  n
+            else k n divides? if  k
+            else                  n  k 1 +  dividing
+            then then } ;
+
+def 1 1 smallest-divisor   2 dividing ;
+
+def 1 1 prime? { n --  n smallest-divisor  n = } ;
+
+def 1 1 prime-char   prime? if '-' else '.' then ;
+
+def 1 0 test-primes
+  { n --  n 250 < if  n prime-char emit  n 1 + test-primes  then } ;

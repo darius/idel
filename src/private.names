@@ -1,0 +1,16 @@
+allot
+reallot
+read_file
+open_file
+interleave_bits
+uninterleave_bits
+i32_encoded_size
+u32_encoded_size
+ow_grow
+vm_dump_code
+vm_dump_stacks
+operand_count
+lookup_op
+format_op_at
+format_opcode
+vm_sort_of_make

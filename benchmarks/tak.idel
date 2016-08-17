@@ -1,0 +1,4 @@
+def 0 1 main   27 18 9 tak u.  '\n' emit  0 ;
+
+#include "../tests/udot.idel"
+#include "../tests/tak.idel"

@@ -1,0 +1,127 @@
+PACKAGE := idel
+VERSION := 0.1.10
+
+# Common prefix for machine-independent installed files.
+prefix := @prefix@
+
+# Common prefix for machine-independent executable installed files.
+exec_prefix := @exec_prefix@
+
+# Directory to install executables into.
+bindir := @bindir@
+
+# Directory to install libraries into.
+libdir := @libdir@
+
+# Directory to install C header files into.
+includedir := @includedir@
+
+# Top-level directory to install man pages into.
+mandir := @mandir@
+
+# C compiler and options.
+CC := @CC@
+CFLAGS := @CFLAGS@ @DEFS@ -Didel_version_string='"$(VERSION)"'
+ifeq ($(CC),gcc)
+	CFLAGS += -Wall -W -Wpointer-arith -Wstrict-prototypes
+endif
+
+# Other external programs
+AWK := @AWK@
+AR := ar
+RANLIB := @RANLIB@
+
+# Installer program
+INSTALL := @INSTALL@
+INSTALL_DATA := @INSTALL_DATA@
+
+
+.PHONY: all install uninstall clean distclean dist
+.PHONY: quickbench benchmark bench test check regress
+.PHONY: examples wc
+
+all: bin/idelvm bin/idelasm libidel.a
+
+install: all
+	$(INSTALL) bin/idelvm $(bindir)
+	$(INSTALL) bin/idelasm $(bindir)
+	$(INSTALL) bin/cppidelasm $(bindir)
+	$(INSTALL) bin/idelrun $(bindir)
+	$(INSTALL_DATA) libidel.a $(libdir)
+	$(INSTALL_DATA) src/idel.h $(includedir)
+	$(INSTALL_DATA) src/idel_porting.h $(includedir)
+	$(INSTALL_DATA) doc/idelvm.1 $(mandir)/man1
+	$(INSTALL_DATA) doc/idelasm.1 $(mandir)/man1
+
+uninstall:
+	rm -f $(bindir)/idelvm
+	rm -f $(bindir)/idelasm
+	rm -f $(bindir)/cppidelasm
+	rm -f $(bindir)/idelrun
+	rm -f $(libdir)/libidel.a
+	rm -f $(includedir)/idel.h
+	rm -f $(includedir)/idel_porting.h
+	rm -f $(mandir)/man1/idelvm.1
+	rm -f $(mandir)/man1/idelasm.1
+
+
+# See http://www.pcug.org.au/~millerp/rmch/recu-make-cons-harm.html
+# for an explanation of this makefile structure.
+
+# Each module will add to these.
+TESTS := 
+QUICKBENCH := 
+BENCHMARKS := 
+EXAMPLES := 
+CORE_SRC := 
+CLEAN := 
+
+# The description for each module.
+include src/Module.mk
+include tests/Module.mk
+include benchmarks/Module.mk
+include examples/Module.mk
+
+
+test: 		all $(TESTS)
+quickbench:	all $(QUICKBENCH)
+benchmark:	all $(BENCHMARKS)
+examples:	all $(EXAMPLES)
+
+check: test
+regress: test quickbench
+bench: benchmark quickbench
+
+clean:
+	rm -f *.o *~ */*~ */*/*~ */*/*.pyc frozen image output gmon.out
+	rm -f $(CLEAN)
+
+wc:
+	wc $(CORE_SRC)
+
+
+# The rest of this makefile is boilerplate.
+
+distclean: clean
+	rm -f config.* configure.scan Makefile
+
+dist: regress distclean configure
+	cd .. && ln -sf $(PACKAGE) $(PACKAGE)-$(VERSION)
+	cd .. && (find $(PACKAGE)-$(VERSION) -follow -type f | egrep -v '(^attic/)|/CVS/' | xargs tar cfz $(PACKAGE)-$(VERSION).tar.gz)
+	rm ../$(PACKAGE)-$(VERSION)
+	echo '#!/bin/sh' >../upload-$(PACKAGE)
+	echo 'cpsmop $(PACKAGE)-$(VERSION).tar.gz www/software/$(PACKAGE)/. &&' >>../upload-$(PACKAGE)
+	echo 'ssh darius@shell.accesscom.com "cd www/software/$(PACKAGE) && ln -sf $(PACKAGE)-$(VERSION).tar.gz $(PACKAGE).tar.gz"' >>../upload-$(PACKAGE)
+	chmod +x ../upload-$(PACKAGE)
+	cp README ChangeLog /home/me/www/software/$(PACKAGE)/
+
+configure: configure.in
+	autoconf
+
+config.status: configure
+	if [ -f config.status ]; \
+	then ./config.status --recheck; \
+	else ./configure; fi
+
+Makefile: Makefile.in config.status
+	./config.status

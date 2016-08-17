@@ -1,0 +1,57 @@
+borednet -- a passtime for idle computers
+
+NOTE: the Python code current works only on Unix.
+
+
+To try this out:
+
+1. Either install idel with `make install' from the main directory of
+this distribution, or just build it with `make' and then edit the
+paths in the variables at the top of jobber.py and dealer.py to refer
+to idelvm and idelasm in the main directory.  (I should automate this,
+obviously.)
+
+2. To run the example job dealer, go into this directory and enter:
+
+    $ python factoring-task.py
+
+3. To run a jobber client, start up a new shell and enter:
+
+    $ python jobber.py localhost   # or whatever host is running codecon-sample
+
+This should result in codecon-sample eventually printing "11 factors
+121" amidst debugging messages.  Not too thrilling yet...
+
+
+How it works:
+
+A jobber contacts a dealer, tells it "I'm bored", and gets back either
+a job or a referral to another dealer that might have work.  The job,
+if it gets one, takes the form of an idel object file plus a tag
+that's unique among all the jobs from that dealer.  The jobber runs
+the job (at high niceness and with limits on the total space and time
+consumed) then makes a new connection to the dealer and sends back the
+output with the tag.  (Currently there's no limit on the amount of
+output except what's inherent in the runtime limit.  Currently the job
+is also able to save its state to the jobber's hard disk, though the
+filename is fixed and the size of the file is bounded by the size of
+memory given to idelvm.  These will be plugged in the next few days.)
+
+A dealer keeps a list of tasks to work on (each task being divisible
+into jobs), plus a list of jobs sent out but not yet completed.  The
+dealer code needs more work to be realistically useful -- keeping
+track of which jobs failed and need to be reissued, and which ones
+should have finished by now but haven't, communicating with other
+dealers about available tasks in order to get referrals, sending out
+jobs redundantly for cross-checking, and so on.
+
+A task is an object you create to put your jobs onto borednet.
+factoring-task.py is an example; the methods you need to write are
+explained in the doc strings there.
+
+
+General apology:
+
+I'm still fairly new at network code -- this borednet implementation
+is much more amateurish than the main idel code.  Suggestions and
+improvements are welcome.

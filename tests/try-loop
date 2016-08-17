@@ -1,0 +1,16 @@
+#!/bin/sh
+
+if cpp tests/loop.idel | bin/idelasm >image 2>output
+then echo -n     
+else echo "*** failed1: loop ***"; exit 1
+fi
+
+if bin/idelvm -fuel 10000 image >output 2>&1
+then echo "*** failed1: loop ***"; exit 1
+else echo -n
+fi
+
+if diff output tests/loop.failure
+then echo "passed: loop"
+else echo "*** failed: loop ***"; exit 1
+fi

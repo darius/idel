@@ -1,0 +1,189 @@
+-*- text -*-
+
+fixme: make generic stuff like GRAB in opcodes use a generic type
+that's wide enough for pointers.  meanwhile i'm just leaving out
+opcode combination.
+
+gcc options to try: 
+   -Os  (like -O2 but without tradeoffs that waste space)
+   -fomit-frame-pointer
+   -mcpu=i386   (more space-saving)
+
+Man, these code chunks are a bother.  I wonder if we couldn't avoid
+them completely by keeping all code for a defn contiguous... if we
+knew a good bound ahead of time on how much space was needed (or could
+relocate), and fragmentation wasn't a concern, we could.  For dynamic
+codegen, prespecifying a bound would be a pain, though.  So it comes
+down to which would be more of a pain, chunks or relocation?  Note
+that we only need to relocate during the codegen of a single defn --
+once it's complete, we can freeze it.  And branches could use
+pc-relative addresses without much overhead.  However, now we have a
+new potential problem: fragmentation.  Also, the nesting stack and the
+relocations table would have to refer to code locations in a way that
+survives relocation (e.g. offset from the end).  Not clearly a net
+win.
+
+get `make test' to exercise the -profile option (and others?)
+
+$ echo "def 0 1 main   'A' remit  0 ;" | idelrun
+1.27: Unresolved reference to remit
+shouldn't that have the program name initially?
+
+go through all uses of word_size and see which should change to bytes_per_word
+(man, that's irritating)
+also look at pointer arithmetic using data-space addresses (same reason)
+same for word_bits (geez)
+
+figure out why that one test case breaks on other systems
+does it still?
+
+profiler should label its outputs with some form of basic-block
+location
+
+picking superinstructions from higher-order sequence counts
+
+superinstructions would generalize better if you didn't use
+the specialized versions for DROP, LOCAL, and BRANCH
+
+i think this'd be a better approach to combining superinstructions and
+specialization:
+- explicitly link specializations to their prototype in the opcodes file
+- main codegen.c code doesn't know about specializations
+  (this is good also because it makes it easier to add a native backend)
+- opcodes.awk generates checks in peep*.inc
+- the way those checks work:
+  - first we look for a combo
+    - if found, we look for a specialization of *that*
+    - if not, we look for a specialization of the starting instruction
+      - if that's found, we can then look for a combo on that
+- hopefully we can organize it all so the look-fors are just tail
+  recursive calls into the basic emitters (conceptually)
+
+delay generating RETURN instructions since we might want TAILCALL
+instead, etc.  (always generating RETURN at the end of a defn uses
+more space and sometimes splits up a basic block, e.g. in the fib
+benchmark)
+
+get IDIV0 and IMOD0 to automatically use the right logic by checking
+which way this c compiler rounds
+
+add explicit checks that the stuff in idel_porting.h actually works
+right for the particular compiler the system's built under
+
+remove all dynamic mallocing
+
+change object file format: interleave bits of major and minor version
+numbers.  also, reserve a range of tag numbers for one-byte combined
+tag/length values, to be used in the future.  (say 0..63)
+
+get it working on a 64-bit system
+
+read p2p book chapter on resource management
+camram mailing list?
+
+get the codegen to break up too-long code paths so fuel checks happen
+more often (at a configurable level).  this would be less needed if we
+had the fuel checks subtract a proportional amount of fuel, instead of
+decrementing by 1.
+
+test borednet before releasing
+
+read about ajanta
+
+more benchmark ideas:
+  spellchecking with tries (sort of needs a standard dictionary + a
+    second input source)
+  bignum arithmetic (too much work for now)
+  lz compression (too much work for now)
+  lexing (but wc sort of does that)
+  life
+
+another optimization:
+In code like { x -- y if  x foo  bar  then }
+we can notice that there are no more references to x after the call
+to foo (since we generate in reverse order), and insert a DROP at 
+that point (assuming we didn't already generate the DROP after the
+current position -- we'd have to spit them out lazily on both branches
+of the IF).
+
+a ``SWAP -'' instruction might be worthwhile
+then negation would be a simple macro: ``0 SWAP -''
+(right now it'd have to be ``-1 xor 1 +'' or ``{ n -- 0 n - }'')
+ironically, the same goes for < and u< so how about a SWAP instruction?
+i have been thinking of PICK and ROLL (with static operands)...
+
+design capability stuff
+strawman:
+
+- each vm comes with a 16-entry key store
+
+- key invocation works like this:
+  - you supply some range of addresses for each of parameter and
+    result, for each kind of address space:
+    - stack:    i top elements (static)
+    - fp stack: j top elements (static) (TBD)
+    - keystore: k bottommost elements (static)
+    - store:    [m..n] (dynamic from the stack)
+                (what about read vs. read/write vs. write?
+                 keykos did copying because you could get sharing with
+                 explicit node manipulations if you really wanted it.)
+                (word aligned?)
+
+- to create a gate key:
+  - describe it statically with signature and defn #
+  - perform an instruction that takes 1 parameter (call it p) off the
+    stack and creates a new key in the keystore (which element?)
+
+- to run an invoked gate key:
+  - the target VM needs to have space for its arguments
+    - we could require it to have space available for any of its
+      entry points before it can become `available'...  or check at
+      invocation time
+  - start with the supplied stuff on the stack and in the keystore, 
+    plus p on top of the stack
+  - there are fetch and store instructions that work within the data
+    blocks supplied (or we could copy blocks between spaces...)
+  - return from the defn to go back to the caller
+  - how to do coroutines?  maybe we should have tail-invoke...
+
+- other keystore ops:
+  - copy
+  - roll
+
+- how do basic vm resources get reified?
+
+- rights amplification?
+
+- factories?
+
+- exceptions?
+
+- how do we safely delete an object?  so there's no dangling key?
+  i'm thinking each key has a link threaded through it of all the keys
+  referring to the same object...  (this implies that writing to a
+  slot in the keystore has memory-management overhead.)  alternatively
+  we could use handles.  but then we still need to reclaim the handle
+  name eventually.
+
+- make sure you can port ERTP to it
+  why don't we start with the mintmaker example
+    mintmaker
+      make-purse
+    purse
+      get-balance
+      sprout
+      deposit
+
+problem: our keys are more like functions than objects, with a static
+signature.  i thought that was okay, but how do you *conveniently* do
+multiple operations like with the purse?  you could invoke the purse
+with a selector and get back another key that you then invoke.  seems
+painful.  maybe we should avoid static signatures after all.  or we
+could have extra complexity -- model that stuff at the builtin level.
+i.e. give invocation an extra argument that's *always* the `message
+number'.  ok, if we do, then how to bind the methods together when we
+make a new key?
+
+general note on problems and opportunities relative to keykos: we
+don't have memory mapping but we do have complete control over the
+binary code.

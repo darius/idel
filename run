@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# This script is for testing the local version of idel, rather than
+# the installed version (which you can run with bin/idelrun).
+
+# We don't use a pipe so that the program run by idelvm can read
+# stdin.
+
+sourcefile=$1; shift
+cpp "$sourcefile" | bin/idelasm >image && bin/idelvm "$@" image

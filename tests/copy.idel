@@ -1,0 +1,5 @@
+def 0 1 main   copying 0 ;
+def 0 0 copying
+  absorb { c -- c 0 < if
+                    else  c emit  copying
+                    then } ;

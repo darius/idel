@@ -1,0 +1,29 @@
+def 0 1 main
+  0 0 0 out
+  { lines words chars --
+    lines u.  '\t' emit  words u.  '\t' emit  chars u.  '\n' emit } 
+  0 ;
+
+#include "udot.idel"
+
+#define c_isspace   c ' ' =  c '\t' =  or
+
+def 3 3 out                         \ Called when currently outside a word
+  absorb { lines words chars c --
+  c 0 < if  lines words chars  
+      else  c 10 = if                lines 1 +  words      chars 1 +  out
+                 else  c_isspace if  lines      words      chars 1 +  out
+                               else  lines      words 1 +  chars 1 +  in
+                               then
+                 then
+      then } ;
+
+def 3 3 in                          \ Called when currently inside a word
+  absorb { lines words chars c --
+  c 0 < if  lines words chars  
+      else  c 10 = if                lines 1 +  words  chars 1 +  out
+                 else  c_isspace if  lines      words  chars 1 +  out
+                               else  lines      words  chars 1 +  in
+                               then
+                 then
+      then } ;

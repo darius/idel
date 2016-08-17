@@ -1,0 +1,152 @@
+external api to interpreter
+external function access (review how mite & glulx do it) (& omniware?)
+tracking source-file positions
+ensure source syntax can express everything in object file
+api for object files
+basic debugger
+improve speed of interpreter with automatically specialized instructions
+use `inline' in codegen.c
+jit implementation for x86
+improve compactness of object format with macros/millicode
+documentation & examples
+
+floating point
+indirect calls
+throw/catch or something
+rounding options for signed division
+extended arithmetic
+runtime code generation
+jump-table primitive
+does>
+
+
+notes:
+
+A counted-loop form would make it fairly easy to move the enough-fuel
+check out of the loop in favorable cases.  It could also help do the
+same for memory bounds checks.
+
+Hm, I wonder if there's any way to combine the fuel check with the
+stack overflow check...  (Obviously we could use the host OS process
+mechanisms for both, but that kind of defeats our purpose...)  Yeah,
+there is.  Put the stack space and fuel remaining in two fields in one
+cell, with padding fields on the `overflow' side of each.  The width
+of the padding depends on the maximum delta possible.  On a CALL, you
+add a constant combining the stack and fuel deltas, then test for any
+nonzero bits in the padding fields.
+
+Each label comes with a statically-checked stack effect annotation.
+This means we'll need both static and dynamic checking for the
+indirect-call op.
+
+Tuning note: a tail call to self never needs a dynamic stack check.
+The same would hold true for a `larger' loop if the dynamic check at
+the head accounted for all possible paths, but ensuring that would be
+more complicated and would give you a more conservative check, so
+let's work on that later if at all.
+
+I think register assignment is going to be a serious problem in the
+jit compiler.  We can probably use a convention like: the deeper a
+parameter's position on the stack, the less important it is to have in
+a register.  Maybe the object format will need more info to help.
+
+1. Add a `macro' definition top-level form.  Macros are grouped in
+   the object file, and there's an opcode for invoking them.
+2. All unused opcodes become invocations of one of the first N macros
+   defined.  Macros may not be recursive; a simple way to enforce that
+   is by allowing them to refer only to lower-numbered macros.
+3. The decompression format uses default predefinitions of the first
+   N words as macros for compressing `typical' code and for invoking
+   standard external decompression functions.  (Among those functions
+   should be `decompress as .gz', etc.)  If you supply macro 
+   definitions with those numbers, then they override the default.
+4. Write a code-compressor a la Proebsting to build the macro set.
+
+Alternatively, define millicode routines instead of macros.  Again
+they can't be recursive, but furthermore they can't use the CALL
+instruction, and they're required to be well-formed like functions.
+However, they can use the caller's locals, plus they come with an
+operand mask word: a `1' in the mask corresponds to an operand fetched
+inline from the instruction stream of the caller.  (The bits are
+numbered to correspond to operands in the millicode instructions as
+they're encountered.  We need to decide on how, or whether, branches
+are allowed...)  The advantages of this variant: it's simpler to
+interpret without expanding out the `macros' at compile time.  (Could
+be important on tiny processors.)  Disadvantages: it's more complex
+and imposes restrictions on factoring.  Indifferent: it permits
+abstracting over immediate operands -- the macro approach could be
+fixed to do that too.
+
+This macro/millicode stuff is worthwhile because it lets us define the
+vm as a bare minimum with no complicated set of redundant instructions
+added for size/speed.  It's simpler and more flexible than the ad-hoc
+instruction combinations in the JVM.
+
+The active-packets standard would have a different set of macro
+predefinitions.
+
+OK, the object file format will need a standard for debugging info and
+external linking, etc., and you know how complicated that kind of
+stuff gets.  Norman Ramsey worked on defining that stuff in a simple
+and portable way by embedding runnable code inside the file.  But, um,
+we already have portable runnable code here!  So look into his design
+-- this sounds like the way to do it.
+
+Here's how we'll do indirect calls.  Add opcodes for indirect
+call/tailcall, with the signature of the called word as an operand.
+Add some way of getting the address of a word to pass later as an
+argument to an indirect call op.  The code for any such word is
+preceded by a bitpattern that appears in code segments *only* before
+such words with the same signature.  (The bitpattern is
+target-dependent and might need more than one memory cell.)  So an
+indirect jump has to: bounds-check the pointer, fetch the cell(s)
+before it, test them, then do the actual jump.  For the bounds check
+we might want to dedicate an extra register or two, bleah.
+
+An alternative design would allow you to only pass around handles to
+procedures, with the actual pointers kept in a protected table.
+That's more cumbersome, though, and leaves the implementation with yet
+another memory block to manage.  Hm, you could make it look the same
+to the client program, though, except for the actual integer values of
+the handles/pointers (which are of course unspecified).  Er, wait, no,
+I'm being stupid.  If we want to be able to serialize the runtime
+state portably, we need the procedure pointers to be portable.  Since
+they are not opaque, we need to define exactly what values they have.
+(That, or pass along the integer values of the pointers so the
+destination machine can map them to its own values at runtime -- ugh
+-- or else give up on serializing the *entire* state.)  So I guess the
+handles are the way to go.
+
+All this still can't do calls that are generic wrt signature, but
+there'll be runtime code generation available to take up the slack.
+
+We'll want the object file to give some local indication of which
+definitions are possible entry points from indirect calls, so the
+implementation can avoid adding a header in the typical case, or
+whatever other tricks it might do, without extra analysis work.  This
+brings up the question of how to encode such info in the object file
+-- it's not the only such flag we might want.  (Tell which are leaf
+procedures, for instance.)  I'd expect the escaping set to be
+typically sparse (and when it's dense you'll have efficiency problems
+regardless), but the leaf set typically dense...
+
+
+done:
+
+compiler
+nested locals
+memory access instructions
+variables
+portable object format
+debug rev.forth
+link loader with vm.c
+generate implementation from opcode descriptions
+tail call optimization
+portable semi-efficient threaded-code implementation using Gnu C labels
+forward refs
+safety & fuel
+remove hard limits
+serialization
+string constants
+0.1 release
+eliminate pc-relative arguments

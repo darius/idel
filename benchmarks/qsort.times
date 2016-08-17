@@ -1,0 +1,217 @@
+Fri Feb  1 00:58:36 PST 2002
+real 5.08
+user 5.08
+sys 0.00
+Fri Feb  1 01:22:53 PST 2002
+real 5.22
+user 5.19
+sys 0.02
+Fri Feb  1 01:54:24 PST 2002
+./idelvm: Inaccurate stack effect for defn #7 (more results are yielded than declared)
+Command exited with non-zero status 128
+real 0.09
+user 0.00
+sys 0.04
+Fri Feb  1 01:54:59 PST 2002
+real 4.82
+user 4.81
+sys 0.01
+Fri Feb  1 01:57:26 PST 2002
+real 4.77
+user 4.76
+sys 0.01
+Fri Feb  1 02:00:30 PST 2002
+real 4.95
+user 4.93
+sys 0.02
+Fri Feb  1 02:00:57 PST 2002
+real 4.95
+user 4.94
+sys 0.01
+Fri Feb  1 02:01:22 PST 2002
+real 4.77
+user 4.76
+sys 0.01
+Fri Feb  1 02:02:08 PST 2002
+real 4.95
+user 4.94
+sys 0.01
+Fri Feb  1 02:02:51 PST 2002
+real 4.95
+user 4.94
+sys 0.02
+Fri Feb  1 02:03:19 PST 2002
+./idelvm: Overran limit
+Command exited with non-zero status 128
+real 0.02
+user 0.01
+sys 0.01
+Fri Feb  1 02:03:32 PST 2002
+real 4.62
+user 4.61
+sys 0.02
+Fri Feb  1 02:05:08 PST 2002
+real 4.60
+user 4.60
+sys 0.01
+Fri Feb  1 02:07:59 PST 2002
+./idelvm: Stack overflow
+Command exited with non-zero status 128
+real 1.17
+user 1.16
+sys 0.02
+Fri Feb  1 02:11:44 PST 2002
+real 4.62
+user 4.61
+sys 0.01
+Fri Feb  1 23:46:55 PST 2002
+real 5.00
+user 4.55
+sys 0.03
+Sat Feb  2 00:01:08 PST 2002
+real 4.69
+user 4.60
+sys 0.02
+Sat Feb  2 07:07:01 PST 2002
+./idelvm: Overran limit
+Command exited with non-zero status 128
+real 0.02
+user 0.01
+sys 0.01
+Sat Feb  2 07:07:24 PST 2002
+real 4.61
+user 4.60
+sys 0.02
+Sat Feb  2 07:08:10 PST 2002
+real 4.61
+user 4.60
+sys 0.01
+Sat Feb  2 07:10:41 PST 2002
+real 4.61
+user 4.59
+sys 0.02
+Sun Feb  3 00:11:17 PST 2002
+real 4.64
+user 4.62
+sys 0.02
+Sun Feb  3 00:34:46 PST 2002
+real 4.61
+user 4.59
+sys 0.02
+Sun Feb  3 08:50:05 PST 2002
+real 4.62
+user 4.60
+sys 0.03
+Sun Feb  3 12:20:23 PST 2002
+real 4.62
+user 4.60
+sys 0.02
+Sun Feb  3 12:21:50 PST 2002
+real 4.61
+user 4.59
+sys 0.03
+Sun Feb  3 17:18:59 PST 2002
+real 4.62
+user 4.60
+sys 0.02
+Sun Feb  3 17:47:50 PST 2002
+real 4.62
+user 4.62
+sys 0.00
+Sun Feb  3 19:12:13 PST 2002
+real 4.62
+user 4.60
+sys 0.02
+Sun Feb  3 19:43:08 PST 2002
+real 4.62
+user 4.60
+sys 0.02
+Mon Feb  4 06:26:01 PST 2002
+real 4.62
+user 4.60
+sys 0.02
+Wed Feb 13 02:41:59 PST 2002
+real 4.62
+user 4.62
+sys 0.01
+Wed Feb 13 20:56:56 PST 2002
+real 4.62
+user 4.61
+sys 0.01
+Mon Feb 18 20:20:59 PST 2002
+real 5.04
+user 4.63
+sys 0.03
+Wed Apr  3 00:24:01 PST 2002
+real 4.70
+user 4.62
+sys 0.03
+Wed Apr  3 00:26:51 PST 2002
+real 4.62
+user 4.60
+sys 0.02
+Wed Apr  3 01:01:35 PST 2002
+real 4.67
+user 4.61
+sys 0.03
+Wed Apr  3 02:41:36 PST 2002
+Wed Apr  3 02:42:56 PST 2002
+real 4.62
+user 4.60
+sys 0.02
+Sat May  4 22:57:36 PDT 2002
+real 4.90
+user 4.88
+sys 0.02
+Sat May  4 23:03:24 PDT 2002
+real 10.96
+user 10.92
+sys 0.04
+Sat May  4 23:43:37 PDT 2002
+real 4.62
+user 4.60
+sys 0.02
+Sun May  5 00:01:28 PDT 2002
+real 4.62
+user 4.61
+sys 0.02
+Sun May  5 01:38:18 PDT 2002
+real 7.42
+user 7.41
+sys 0.01
+Sun May  5 01:50:22 PDT 2002
+real 7.50
+user 7.43
+sys 0.03
+Sun May  5 03:52:59 PDT 2002
+real 7.43
+user 7.42
+sys 0.01
+Fri May 10 02:07:15 PDT 2002
+real 4.62
+user 4.60
+sys 0.02
+Fri May 10 14:59:39 PDT 2002
+real 4.62
+user 4.59
+sys 0.04
+Sat May 11 01:00:27 PDT 2002
+real 4.62
+user 4.60
+sys 0.02
+Mon May 13 19:56:37 PDT 2002
+real 1.14
+user 1.14
+sys 0.01
+Tue Jun 25 13:13:01 PDT 2002
+real 4.62
+user 4.60
+sys 0.02
+Sat Jul 27 02:04:13 PDT 2002
+real 4.61
+user 4.59
+sys 0.02
+Wed Jul 31 01:37:28 PDT 2002
+real 4.61
+user 4.60
+sys 0.01

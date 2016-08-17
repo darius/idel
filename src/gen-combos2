@@ -1,0 +1,20 @@
+some pseudocode for now:
+
+read in the basic blocks and their counts
+
+for each basic block:
+	for each subsequence:
+		increment its count by the basic block's count
+
+while not done:
+
+	pick the (op, ops) pair that most reduces the instruction count
+	add it to frequencies as a new `ops' object
+	write it out
+	replace its instances in basic blocks with the new operation
+
+
+
+the amount a pair (op, ops) reduces the instruction count is:
+
+	the frequency that op is followed by ops

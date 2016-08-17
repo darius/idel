@@ -1,0 +1,35 @@
+\ This player uses the previous move (of both players) to predict the
+\ opponent's next move, then trump it.  We predict that he'll play the
+\ same as he did the last time we saw the same move-pair.
+
+def 0 1 main           0 0 0 1 loop  0 ;
+
+def 4 0 loop           { mine2 his2 mine1 his1 --
+			 his1  mine2 his2 predicted c!
+			 mine1 his1 predicted c@  trump
+			 { mine -- 
+			   mine output
+                           absorb -1 - if
+			     mine1 his1 mine input loop
+                           then } } ;
+
+
+bytes: history         \ 2d array (my-previous, his-previous) -> his-next
+    0 1 2 
+    0 1 2 
+    0 1 2 
+;bytes
+
+def 2 1 predicted      3 * +  history + ;
+
+def 1 1 trump          1 +  3 u/mod { quotient remainder -- remainder } ;
+
+
+def 0 1 input          absorb unprintable ;
+def 1 0 output         printable emit flush-output ;
+
+bytes: code-table      'p' 's' 'r'  ;bytes
+def 1 1 printable      code-table + c@ ;
+def 1 1 unprintable    { in --  
+                         0 printable  in = if  0  else
+                         1 printable  in = if  1  else  2  then then } ;

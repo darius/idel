@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# Start up a jobber.  Must be run from the main directory of the idel
+# distribution.  The arguments are a list of addresses of dealers.
+
+python examples/borednet/jobber.py "$@"

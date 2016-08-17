@@ -1,0 +1,24 @@
+def 1 1 hotpo
+  { k --  k 1 and if   k k + k + 1 +  else  k 1 >>  then } ;
+
+def 2 1 hotpo-loop
+  { k p --  k 1 = if
+              p
+            else
+              k hotpo  p 1 +  hotpo-loop
+            then } ;
+
+def 1 1 hotpo-period   0 hotpo-loop ;
+
+def 3 1 longest-loop
+  { k best best-period --
+    k 1 = if
+      best
+    else
+      k hotpo-period
+      { k-period --
+	k 1 -  k-period best-period < if best best-period 
+				    else k    k-period    then longest-loop }
+    then } ;
+
+def 1 1 longest   1 0 longest-loop ;

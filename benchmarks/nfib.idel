@@ -1,0 +1,8 @@
+def 0 1 main   34 nfib u.  '\n' emit  0 ;
+
+#include "../tests/udot.idel"
+
+def 1 1 nfib
+  { n --  n 2 < if  1
+              else  n 1 - nfib  n 2 - nfib  + 1 +
+              then } ;

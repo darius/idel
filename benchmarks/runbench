@@ -1,0 +1,11 @@
+#!/bin/sh
+date >>"benchmarks/$1".times
+cpp "benchmarks/$1".idel | bin/idelasm >image
+(/usr/bin/time -p bin/idelvm -data 1100000 -fuel 1000000000 -stack 300 image) >output 2>>"benchmarks/$1".times
+
+if diff output "benchmarks/$1.ok"
+then echo "passed: $1"
+else echo "*** failed: $1 ***"; exit 1
+fi
+
+tail -3 <"benchmarks/$1".times 1>&2

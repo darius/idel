@@ -1,0 +1,12 @@
+def 0 1 main
+  3000000 rands
+  rand u. '\n' emit
+  0 ;
+
+def 1 0 rands
+  { n --
+    n if  rand { _ -- }  n 1 - rands  then } ;
+
+
+#include "../tests/random.idel"
+#include "../tests/udot.idel"

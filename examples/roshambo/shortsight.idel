@@ -1,0 +1,25 @@
+\ Contributed by Luke Gorrie <luke@bluetail.com>
+\ Short-sighted player: starts by choosing Rock, and then always
+\ chooses what would have beaten the other player's previous move.
+
+def 0 1 main
+    'r' answer
+    shortsight
+    0 ;
+
+def 0 0 shortsight
+    absorb -1 - if              \ if not at EOF:
+      absorb trump answer
+      shortsight 
+    then ;
+
+def 0 0 ignore
+    absorb { x -- } ;
+
+def 1 1 trump
+    { move -- move 'r' = if 'p' else
+              move 's' = if 'r' else
+              move 'p' = if 's' else '?' then then then } ;
+
+def 1 0 answer
+    emit flush-output ;

@@ -1,0 +1,3 @@
+#!/bin/sh
+# TODO: parse out arguments intended for idelasm
+cpp "$@" | idelasm

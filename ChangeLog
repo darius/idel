@@ -1,0 +1,135 @@
+-*- text -*-
+
+New in 0.1.10 (1 August 2002):
+
+ - added flush-output instruction
+ - examples/roshambo contributed by Luke Gorrie
+
+
+New in 0.1.9 (11 May 2002):
+
+ - now works on the Alpha, and should be 64-bit clean in general
+ - added doc/cvsinstall.text
+ - bugfix: when -profile was on and a basic block got split across
+   dynamically allocated code chunks, the profile output would barf
+ - bugfix: exit status of idelvm should be 128 when command line args
+   are wrong, not 1
+ - fixed vm->at_jump_target (it was misplaced, but not in a way that
+   currently matters)
+ - tweaked test scripts to run on Solaris
+
+
+New in 0.1.8 (15 Feb 2002):
+
+ - moved executables into bin/
+ - fixed makefiles to work with sh as well as bash
+ - fixed borednet Python code to conform to coding standards
+ - some cleanup of object encoding/decoding
+ - added bin/jobber
+ - small borednet improvements
+ - hashcash demo for borednet
+
+
+New in 0.1.7 (3 Feb 2002):
+
+bugfixes:
+ - assembler was misparsing # line directives from the C preprocessor,
+   yielding wrong line numbers in error messages
+ - assembler `ints:' directive now word-aligns the new symbol
+
+other:
+ - added profiling and -profile switch
+ - speedup by combining instruction sequences into superinstructions
+ - speedup by specializing instructions to particular immediate
+   arguments
+ - a couple of other performance tweaks to the interpreter
+   (improved scheduling of next-instruction fetch, and offset to stack
+   pointer)
+ - distributed work of returning() throughout codegen in preparation
+   for multiple backends (no more inspection of already-generated
+   instructions)
+ - added bss-data: declarations to the assembler
+ - added character constants to the assembler
+ - added SHA-1, quicksort, Boyer-Moore-Horspool, and sieve benchmarks
+ - improved codegen error messages
+ - renamed `:' to `def' since it's not the same as the Forth `:'
+ - renamed the shift operators with the Java names (<<, >>, >>>)
+
+
+New in 0.1.6 (18 Jan 2002):
+
+bugfixes:
+ - assembler occasionally segfaulted on undefined defns
+
+other:
+ - assembler supports hex constants
+ - assembler is smarter about the Zeroes tag
+
+
+New in 0.1.5 (16 Jan 2002):
+
+incompatible changes:
+ - stack pickling is now disabled unless you run idelvm with the
+   -development flag.  Documenting the design revealed flaws in it that
+   just aren't worth the trouble right now to fix.  (See notes/stacks.text)
+
+other:
+ - added examples/borednet
+ - now has an API and builds a library implementing it
+ - added Zeroes tag to object file format
+
+	
+New in 0.1.4 (18 Dec 2001):
+
+incompatible changes:
+ - execution now starts at the first defn, not the last
+   (this will enable pipelined downloading and execution of object files)
+ - idel programs now must return an exit code
+
+bugfixes:
+ - fixed vm bug (stack checker skipped over implicit ELSE clauses)
+
+other:
+ - eliminated recursive makefiles (now requires GNU Make)
+ - conditionalized gcc-specific flags in Makefile
+ - increased assembler hashtable size
+ - added byte-data sections to the object format
+ - assembler chooses between byte-data and int-data sections intelligently
+ - got rid of magic numbers for word size all over the place
+ - added huffman example
+ - made sure of signed/unsigned mismatches compiler warned about
+ - removed hard limit on token length in idelasm
+ - minor code cleanup
+ - tests check the status code returned, not just the output
+ - added dependencies on idelasm, idelvm in Module.mk of some examples
+
+
+New in 0.1.3 (12 Dec 2001):
+
+incompatible changes:
+ - now forbids unaligned word access
+
+bugfixes:
+ - fixed assembler bug (allowed reference to out-of-scope local)
+
+other:
+ - changed name
+ - added calculator example
+ - added testexamples target to the makefile
+ - integer div, mod in portability.h
+ - changed makefile to put idelasm & idelvm in the main directory
+ - added a contrib/ directory with Luke Gorrie's elisp code
+ - using cpp as preprocessor to the assembler
+ - assembler gives source locations in error messages
+ - assembler understands line-number directives from cpp
+ - assembler may take multiple input files
+ - space and time limits are arguments to idelvm instead of constants
+ - added some microbenchmarks
+ - runtime error messages now come prefixed with the program name
+ - added -version, -help options
+ - split out the main() from codegen.c
+ - man pages
+ - added idelrun and cppidelasm scripts for development convenience
+ - added an option to set the #! line in idelasm
+ - added doc/tutorial.text
+ - some code cleanup

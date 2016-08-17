@@ -1,0 +1,29 @@
+\ Running this:
+\   rlencode some-input-file | run rldecode.idel 
+\ should reproduce some-input-file on standard output.
+
+: 0 0 decode 
+  absorb { code --  code 0 < if  
+                   
+                    else code 0 = if
+                      absorb absorb repeat
+                    else
+                      code copy
+                    then then } ;
+
+: 2 0 repeat
+  { c n --  0 n < if  
+	      c emit  
+	      c  n 1 -  repeat
+	    else
+	      decode 
+	    then } ;
+
+: 1 0 copy
+  { n --  0 n = if  
+	    decode
+	  else
+	    absorb emit  n 1 - copy
+	  then } ;
+
+: 0 0 main   decode ;

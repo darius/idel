@@ -1,0 +1,76 @@
+\ Simple infix calculator.
+
+def 0 1 main
+  next-char next
+  0 expr . '\n' emit 
+  0 ;
+
+#include "../../tests/udot.idel"
+
+def 2 1 /     /mod { quot rem -- quot } ;
+def 2 1 mod   /mod { quot rem -- rem } ;
+
+def 1 0 .
+  { n --   n 0 < if  '-' emit  0 n -  else  n  then u. } ;
+
+
+\ Scanning
+
+ints: the-char     0  ;ints
+ints: token        0  ;ints
+ints: token-value  0  ;ints
+
+def 0 1 get-char    the-char @ ;
+def 0 0 next-char   absorb the-char ! ;
+
+def 1 1 digit?   '0' -  10 u< ;
+def 1 1 blank?   { c --  c ' ' =  c '\t' =  or } ;
+
+def 1 0 scan-number
+  get-char '0' - { accum digit --
+		   digit 10 u< if  accum 10 *  digit +  
+				   next-char scan-number
+			     else  accum token-value !  then } ;
+
+def 0 0 next
+  get-char { c --  c digit? if  0 scan-number  '0' token !  else
+                   c blank? if  next-char next
+                          else  c if  next-char  then
+                                c token !  0 token-value !
+                          then then } ;
+
+
+\ Parsing
+
+def 0 1 factor
+  token @ token-value @ { t v --  
+                          t '0' = if  next  v  else
+                          t '-' = if  next  0 factor -  else
+                          t '(' = if  next  0 expr  next
+                                else  0  then then then } ;     \ error
+
+def 1 2 precedence
+  { t --  '+' t = if  1 2  else
+          '-' t = if  1 2  else
+          '*' t = if  3 4  else
+          '/' t = if  3 4  else 
+          '%' t = if  3 4  else  -1 -1  then then then then then } ;
+
+def 3 1 perform
+  { op -- '+' op = if  +    else
+          '-' op = if  -    else
+          '*' op = if  *    else
+          '/' op = if  /    else 
+          '%' op = if  mod  else  { L R -- 0 }  then then then then then } ;
+
+def 1 1 expr
+  factor  expr-loop ;
+
+def 2 1 expr-loop 
+  token @ precedence
+  { p L Lp Rp --  Lp p < if  L  
+                       else  token @
+                             { operator --  next 
+                                            L  Rp expr  operator  perform }
+                             { result --  p result expr-loop }
+                       then } ;

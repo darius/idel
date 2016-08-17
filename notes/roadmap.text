@@ -1,0 +1,113 @@
+ - make a vm-runner that's defanged (no input, no save).
+   To support this, implement just enough of the capability model:
+   - Change current i/o instructions to work on blocks.
+   - Fix all the test code to #include code that uses this stuff 
+     and provides emit/absorb.
+   - Add a capability store with clist indices, and an instruction to
+     invoke the capability at an index, with a given signature.
+     (Or is a capability stack better?)
+   - Have the vm interface give you a way to specify capabilities.
+     A vm should have none by default at startup.  Define capabilities
+     for read, write, and save.
+ - build a distributed.net type of job-runner demo
+ - add a SAT-solver example using it
+ - release new version
+ - separate the stack effect declarations.  make calling an unresolved
+   defn a runtime error instead of loadtime.
+ - change data sections to be streaming data instead of initial
+   contents of memory.  add a new instruction to fetch data from it.
+   add a requested-resources block type to the object format.
+   (e.g. memory space needed.)
+ - add object-format field for interpreter
+ - update data-compression example to use all this
+ - add floating point
+ - release
+
+random crap:
+
+ - write up a note on how this is different from argante
+ - see if there are autoconf options for word size
+ - add code from tutorial to the regression tests (extracted automatically)
+ - pgp-sign the distributed code
+ - allow nested redefinitions of locals in assembler
+ - check error status on all i/o operations
+ - test on other machines
+ - updated website
+ - fix calculator example to complain if input doesn't parse
+ - comment calculator code, add tests with bad inputs
+ - tougher test of `save' instruction
+ - more tests
+ - change stack-pointer representation so sp[-1] becomes sp[0]?
+ - see if we can define useful macros for all the array-growing operations
+ - find a more suitable preprocessor?
+ - better slogan than ``virtual machine for mobile code''?
+ - audit for signed/unsigned mismatches in assignments
+ - audit for arithmetic overflow 
+
+0.2:
+
+essential requirements:
+ - capability security
+ - can serve a practical data compression format
+ - can serve a semipractical job-distribution system
+   (practical for clients, but only undemanding apps would profit by it)
+ - better explained
+
+to do:
+ - capabilities for IPC and resource management, not just for native methods
+ - define an api and reserve its namespace
+ - error recovery with longjmp
+ - factor out the dynamic-code-generator interface from the
+   mobile-code stuff
+ - add millicode for code compression
+ - add DEFER for staged execution and code compression
+ - docs
+   - a better motivational doc
+   - specifications
+ - convenient interface through command-line program
+ - reorganize the source tree with stuff needing auditing all together
+ - settle on the name
+
+0.2.1:
+
+ - bigger examples
+   - linux kernel module and applications (such as?)
+ - use vmgen or vmgen-style optimizations
+ - do a basic debugger/profiler if there's time
+
+0.3:
+
+ - extra backend: compiles via gnu c sourcecode
+   hmmm... maybe an x86 jit is still easier.  much smaller TCB.  
+   DEFER's less of an issue.  and there's less reason to want a
+   runtime choice of which backend to use.  and it's cooler.
+   otoh gcc would still compile better.
+ - C subset frontend
+ - more instructions for efficiency (like add-with-carry)
+ - specify how to handle different word sizes
+
+0.4:
+
+ - confinement mechanism
+ - TTT browser
+ - include debug info in object files
+ - debugger and profiler
+
+0.5:
+
+ - indirect calls
+ - some kind of exception support (see what c-- is doing)
+ - static types for floats, pointers, code pointers, and capabilities?
+ - decent support for dynamic languages
+ - start on ENative
+
+0.6:
+
+ - C frontend
+ - CapTP
+
+0.7:
+
+ - higher-quality x86 backend
+ - works with ENative
+ - serious applications

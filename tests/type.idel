@@ -1,0 +1,2 @@
+def 2 0 type 
+  { a n --  0 n < if  a c@ emit  a 1 +  n 1 -  type  then } ;

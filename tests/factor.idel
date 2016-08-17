@@ -1,0 +1,39 @@
+def 0 1 main   0 2 test-loop u.  '\n' emit  0 ;
+
+#include "udot.idel"
+
+def 2 1 divides?
+  { divisor n --  n divisor umod  0 = } ;
+
+def 2 1 testing
+  { n i --  n  i i *  u< if
+              n
+            else
+                       i  n  divides? if  i
+              else i 2 +  n  divides? if  i 2 +
+              else                        n  i 6 +  testing
+              then then 
+            then } ;
+
+def 1 1 smallest-divisor
+ { n --        n 3 u< if  n            else
+         2 n divides? if  2            else
+         3 n divides? if  3            else
+                          n 5 testing  then then then } ;
+
+def 2 1 counting
+  { n k --  n smallest-divisor
+            { d --  d n = if
+                      k
+                    else
+                      n d u/  k 1 +  counting
+                    then } } ;
+
+def 1 1 count-divisors   1 counting ;
+
+def 2 1 test-loop
+  { sum i --  i 1000 = if
+                sum
+              else
+                i count-divisors sum +  i 1 +  test-loop
+              then } ;

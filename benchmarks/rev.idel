@@ -1,0 +1,12 @@
+#define vsize 10000
+bss-data: v 40000
+
+def 0 1 main
+  vsize iota
+  1000 loop
+  v @ u.  '\n' emit 
+  0 ;
+
+
+#include "../tests/udot.idel"
+#include "../tests/rev.idel"

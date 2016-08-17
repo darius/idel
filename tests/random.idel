@@ -1,0 +1,35 @@
+\ Minimal Standard Random Number Generator
+\ Park & Miller, CACM 31(10), Oct 1988, 32 bit integer version.
+\ better constants, as proposed by Park.
+\ Adapted from the Scheme version by Ozan Yigit modified by Jonathan Kleid.
+
+#define Q 44488
+#define A 48271
+#define R 3399
+#define M 0x7fffffff
+
+ints: seed   1   ;ints
+
+\ The argument must be in the range [1..M-1], apparently.
+def 1 0 srand   seed ! ;
+
+def 0 1 rand
+  seed @ Q /mod
+  { quot rem --
+    A rem *  R quot * - 
+    { test --
+      0 test < if  test  else  test M +  then } } 
+  { result --
+    result seed !  result } ;
+
+def 1 1 random
+  { n --
+    M n /mod { q slop -- slop n random-loop } } ;
+
+def 2 1 random-loop
+  rand { slop n r --
+         slop r < if
+           r n /mod { q rem -- rem }
+         else
+           slop n random-loop 
+         then } ;

@@ -1,0 +1,61 @@
+To be implemented:
+A vm is a compound of code, context, data, and limits.
+
+
+vm_make:          vm
+vm_unmake         vm:
+
+vm_context        vm: context
+vm_data           vm: store
+
+vm_defns_count    vm: i
+vm_defns_ref      vm i: defn
+
+vm_code_start     vm count stack_effect:
+vm_code_add_insn  vm insn:
+vm_code_end_defn  vm:
+vm_code_end       vm:
+
+vm_limit          vm resource: i
+vm_set_limit      vm resource i:
+
+vm_run            vm: result_code
+
+vm_freeze         vm: objfile
+vm_load           vm objfile:
+
+
+context_reset     context defn:
+context_top_frame context: frame
+frame_parent      context frame: frame
+frame_pc          context frame: position
+frame_locals      context frame: store
+frame_stacked     context frame: store
+
+
+store_size        store: i
+store_ref         store i: sword
+store_set         store i sword:
+store_unmake      store:
+
+
+position_defn     position: i
+position_insn     position: i
+
+
+defn_effect       defn: stack_effect
+defn_insns_count  defn: i
+defn_insns_ref    defn i: insn
+
+
+insn_make         i sword: insn
+insn_opcode       insn: i
+insn_operand      insn: sword
+
+
+result_code = Completed
+            | Exhausted (resource)
+            | Bounds_violation
+            | ...
+
+resource = Fuel | Data_space | Context_space | Code_space | ...

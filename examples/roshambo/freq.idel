@@ -1,0 +1,91 @@
+\ Contributed by Luke Gorrie <luke@bluetail.com>
+\ Make the move that will beat the opponent's most frequent
+\ response to my previous move.
+
+\ Table layout:
+\  RSP
+\ R012
+\ S345
+\ P678
+\
+\ y-axis is my move, x-axis is theirs.
+\ Each coordinate {me, them} records how many times the move of mine
+\ has been followed by the move of theirs.
+
+bytes: table  1 0 0  0 1 0  0 0 1 ;bytes
+
+def 0 1 main
+    first_move answer
+    'r' 'p' play
+    0 ;
+
+def 0 1 first_move  'r' ;
+
+def 2 0 play
+    absorb -1 = if        \\\\ check for EOF
+        { x y -- }
+    else
+	absorb
+	{ x y him --
+	  \\\\ Find the best move I can make
+	  x react
+	  { move -- \\\\ { last_seen, response } ++
+		    x him moves->addr { addr -- addr c@ inc  addr c! }
+		    move answer
+		    y move play } }
+    then ;
+
+\ Give the best move to play when given the last move we made
+def 1 1 react
+    { move --
+        move 'r' moves->addr
+        { addr --
+            0 0 0 addr find_best } } ;
+
+\ Find the best move to play next
+\ max best n ptr find_best -- move
+def 4 1 find_best
+    { max best n ptr --
+        ptr c@
+	{ count --
+	    n 3 = if
+		    best number->move trump
+		  else
+		    count max < if max best else count n then
+		    n inc  ptr inc  find_best
+		  then } } ;
+
+def 2 1 max
+    { n m -- n m <  if n else m then } ;
+
+def 1 1 inc
+    1 + ;
+
+def 1 1 move->number
+    { move -- move 'r' = if 0 else
+      	      move 's' = if 1 else
+	      move 'p' = if 2 else -1 panic 0 then then then } ;
+
+def 1 1 number->move
+    { move -- move 0 = if 'r' else
+      	      move 1 = if 's' else
+	      move 2 = if 'p' else -2 panic 0 then then then } ;
+
+def 2 1 moves->addr
+    moves->index table + ;
+
+def 2 1 moves->index
+    { me him -- him move->number  me move->number  3 *  + } ;
+
+def 1 1 not
+    1 + ;
+
+def 1 0 answer
+    emit flush-output ;
+
+def 1 1 trump
+    { move -- move 'r' = if 'p' else
+              move 's' = if 'r' else
+              move 'p' = if 's' else '?' then then then } ;
+
+def 1 0 panic   c@ { x -- } ;

@@ -1,0 +1,26 @@
+\ Variant of shortsight that varies its answer depending on the
+\ success of its last move.
+
+def 0 1 main
+    'r' emit flush-output
+    shortsight			\ never returns
+    0 ;
+
+def 0 0 shortsight
+    absorb
+    { prev --
+      prev -1 - if
+        prev  absorb trump  answer
+        shortsight 
+      then } ;
+
+def 1 1 trump
+    { move -- move 'r' = if 'p' else
+              move 's' = if 'r' else
+              move 'p' = if 's' else '?' then then then } ;
+
+def 2 0 answer
+    { prev move -- move
+                   prev 'd' = if trump then
+                   prev 'l' = if trump trump then } 
+    emit flush-output ;
