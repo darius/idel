@@ -68,7 +68,7 @@ show_help (int exit_status)
 "  -help\n"
 "  -stack n\n"
 "  -version\n"
-"Report bugs to darius@accesscom.com.\n"
+"Report bugs to darius@wry.me.\n"
 );
   exit (exit_status);
 }

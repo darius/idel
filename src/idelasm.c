@@ -1285,7 +1285,7 @@ show_help (void)
 "  -comment <string>\n"
 "  -help\n"
 "  -version\n"
-"Report bugs to darius@accesscom.com.\n"
+"Report bugs to darius@wry.me.\n"
 );
   exit (0);
 }

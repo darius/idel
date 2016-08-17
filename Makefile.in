@@ -105,7 +105,7 @@ wc:
 distclean: clean
 	rm -f config.* configure.scan Makefile
 
-dist: regress distclean configure
+dist: regress distclean configure  # XXX obsolete
 	cd .. && ln -sf $(PACKAGE) $(PACKAGE)-$(VERSION)
 	cd .. && (find $(PACKAGE)-$(VERSION) -follow -type f | egrep -v '(^attic/)|/CVS/' | xargs tar cfz $(PACKAGE)-$(VERSION).tar.gz)
 	rm ../$(PACKAGE)-$(VERSION)
