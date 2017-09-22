@@ -37,7 +37,7 @@ A valid Idel program must satisfy a static check that:
   *  all values are in the range of their type:
      each u16 is in 0..65535, etc.,
      and each opcode is in the list below;
-  * every Local references an enclosing Grab (i.e., its u16 is less
+  *  every Local references an enclosing Grab (i.e., its u16 is less
      than the sum of the u16's of all enclosing Grabs);
   *  the defn_num in every Call is <= the highest defn index in the
      defns block it appears in;
