@@ -1,4 +1,4 @@
 #!/bin/sh
-cpp "tests/$1.idel" | bin/idelasm >image &&
+cpp -traditional-cpp "tests/$1.idel" | bin/idelasm >image &&
 bin/idelvm image >tmp-output &&
 diff tmp-output "tests/$1.ok"

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if cpp tests/loop.idel | bin/idelasm >image 2>output
+if cpp -traditional-cpp tests/loop.idel | bin/idelasm >image 2>output
 then echo -n     
 else echo "*** failed1: loop ***"; exit 1
 fi

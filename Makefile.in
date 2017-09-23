@@ -1,5 +1,5 @@
 PACKAGE := idel
-VERSION := 0.1.10
+VERSION := 0.1.11pre
 
 # Common prefix for machine-independent installed files.
 prefix := @prefix@
@@ -23,7 +23,8 @@ mandir := @mandir@
 CC := @CC@
 CFLAGS := @CFLAGS@ @DEFS@ -Didel_version_string='"$(VERSION)"'
 ifeq ($(CC),gcc)
-	CFLAGS += -g2 -fprofile-arcs -ftest-coverage -Wall -W -Wpointer-arith -Wstrict-prototypes
+#	CFLAGS += -g2 -fprofile-arcs -ftest-coverage -Wall -W -Wpointer-arith -Wstrict-prototypes
+	CFLAGS += -g2 -Wall -W -Wpointer-arith -Wstrict-prototypes
 endif
 
 # Other external programs

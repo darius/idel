@@ -1,6 +1,6 @@
 #!/bin/sh
 
-cpp "tests/$1.idel" >tmp &&
+cpp -traditional-cpp "tests/$1.idel" >tmp &&
 if bin/idelasm tmp >image 2>output
 then exit 1
 else diff output "tests/$1.failure"

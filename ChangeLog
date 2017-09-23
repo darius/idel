@@ -1,5 +1,10 @@
 -*- text -*-
 
+New in 0.1.11pre ()
+
+ - tweaked the test scripts to work with newer cpp
+
+
 New in 0.1.10 (1 August 2002):
 
  - added flush-output instruction
